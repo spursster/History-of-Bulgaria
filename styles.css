@@ -94,6 +94,22 @@ a:hover {
   background: #ebeff2;
 }
 
+.search-results {
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #eef4ff;
+  border: 1px solid #bbe0ff;
+  border-radius: 0.5rem;
+  color: #0f3f6f;
+  font-size: 0.95rem;
+}
+
+.search-highlight {
+  background: #ffe58d;
+  padding: 0 0.1rem;
+  border-radius: 0.25rem;
+}
+
 .mw-body {
   display: grid;
   grid-template-columns: 260px 1fr;
