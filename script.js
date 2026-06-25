@@ -65,7 +65,50 @@ document.addEventListener('DOMContentLoaded', function () {
       card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   }
+// В началото на script.js – зареждане на pollinations.js
+// (ако използвате модули)
+// import { initRulerIcons, showRulerWithIcon } from './pollinations.js';
 
+// Или с динамично зареждане на скрипта
+function loadPollinationsScript() {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'pollinations.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// Променете функцията за случаен владетел
+button.addEventListener('click', async () => {
+    // Зареждаме pollinations.js, ако все още не е зареден
+    if (typeof loadRulerIcon === 'undefined') {
+        await loadPollinationsScript();
+    }
+    
+    let data = rulersLoaded ? rulersData : await loadRulersData();
+    if (!data || data.length === 0) {
+        card.innerHTML = '<p>За съжаление няма налични данни за владетели.</p>';
+        return;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * data.length);
+    const ruler = data[randomIndex];
+    
+    // Показване на владетеля с иконка
+    card.innerHTML = ''; // Изчистваме картата
+    if (typeof showRulerWithIcon === 'function') {
+        showRulerWithIcon(ruler, card);
+    }
+    card.innerHTML += `
+        <h2>${ruler.name}</h2>
+        <p><strong>Източник:</strong> ${ruler.page}</p>
+        <p>${ruler.description}</p>
+    `;
+    
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
   // ===== ТЪРСЕНЕ И ХАЙЛАЙТ =====
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
