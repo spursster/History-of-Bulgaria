@@ -220,6 +220,7 @@ a:hover {
   box-shadow: var(--shadow-sm);
   color: var(--text);
   animation: fadeInUp 0.4s ease forwards;
+  overflow: hidden; /* за да не излиза съдържанието */
 }
 
 @keyframes fadeInUp {
@@ -256,14 +257,14 @@ a:hover {
 /* ----- ОСНОВНО ТЕЛО (grid) ----- */
 .mw-body {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 290px 1fr;  /* Увеличено от 260px на 290px */
   gap: 1.5rem;
 }
 
 /* ----- СТРАНИЧНА НАВИГАЦИЯ ----- */
 .mw-sidebar {
   background: var(--paper);
-  padding: 1rem;
+  padding: 1rem 0.75rem;  /* леко намален хоризонтален padding за повече място */
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   position: sticky;
@@ -357,6 +358,23 @@ a:hover {
 }
 .mw-sidebar li a[href="#modern-history"] {
   background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
+}
+
+/* ----- ЧАТ В СТРАНИЧНАТА ЛЕНТА ----- */
+#chatango-container {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+#chatango-container iframe,
+#chatango-container object {
+  width: 100% !important;
+  height: 350px !important;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ----- ОСНОВНО СЪДЪРЖАНИЕ ----- */
@@ -506,11 +524,12 @@ footer {
    ============================================================ */
 @media (max-width: 900px) {
   .mw-body {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr;  /* на мобилни – единствена колона */
   }
   .mw-sidebar {
     position: static;
     max-height: none;
+    padding: 1rem;  /* възстановяваме нормалния padding */
   }
   .mw-sidebar li a {
     min-height: auto;
@@ -529,6 +548,11 @@ footer {
     float: none;
     width: 100%;
     margin: 0 0 1rem;
+  }
+  /* На мобилни – чатът може да е малко по-нисък */
+  #chatango-container iframe,
+  #chatango-container object {
+    height: 280px !important;
   }
 }
 
@@ -571,60 +595,4 @@ footer {
   .mw-content section {
     page-break-inside: avoid;
   }
-}
-/* Иконки на владетели */
-.ruler-icon {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-    display: block;
-}
-
-.ruler-icon-container {
-    display: inline-block;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #e8e8e8;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
-}
-
-.ruler-icon-container:hover {
-    transform: scale(1.05);
-}
-
-.ruler-icon-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #666;
-    background: #d4d4d4;
-    border-radius: 50%;
-}
-
-/* В картата на случайния владетел */
-.random-ruler-card .ruler-icon-container {
-    float: left;
-    margin-right: 15px;
-    margin-bottom: 10px;
-}
-
-@media (max-width: 600px) {
-    .ruler-icon-container {
-        width: 60px;
-        height: 60px;
-    }
-    .random-ruler-card .ruler-icon-container {
-        float: none;
-        margin: 0 auto 10px;
-        display: block;
-    }
 }
