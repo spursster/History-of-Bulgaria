@@ -243,13 +243,15 @@ a:hover {
   text-shadow: 0 1px 2px rgba(0,0,0,0.55);
 }
 
-.mw-sidebar li a[href="staro-velika-bulgaria.html"] {
-  background-image: linear-gradient(135deg, rgba(78, 58, 27, 0.9), rgba(171, 145, 93, 0.9)), url('images/staro-velika.svg');
-  background-size: 180% 180%, 55% 55%;
-  background-position: center left, center right;
+.mw-sidebar li a[href="Old Great Bulgaria.html"] {
+  background-image: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg');
+  background-size: cover, 55% 55%;
+  background-position: center center, center right;
   background-repeat: no-repeat;
+  background-blend-mode: multiply;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.65);
+  font-weight: 700;
 }
 
 .mw-sidebar li a[href="#ottoman-period"] {
