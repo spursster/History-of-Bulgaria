@@ -430,6 +430,27 @@ a:hover {
   padding-left: 1.25rem;
 }
 
+.map-figure {
+  margin: 1.5rem 0;
+  padding: 0.9rem;
+  background: #f7f8fb;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+}
+
+.map-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.map-figure figcaption {
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 footer {
   margin-top: 2rem;
   padding-top: 1rem;
