@@ -148,6 +148,18 @@ a:hover {
   letter-spacing: 0.02em;
 }
 
+/* stronger hover + icon scale for nav buttons */
+.mw-sidebar li a.nav-button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.2);
+}
+
+/* ensure SVG backgrounds remain crisp on high-dpi */
+.mw-sidebar li a {
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 .mw-sidebar li a:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
@@ -181,6 +193,15 @@ a:hover {
 
 .mw-sidebar li a[href="Wallachia.html"] {
   background-image: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg');
+  background-size: 180% 180%, 55% 55%;
+  background-position: center left, center right;
+  background-repeat: no-repeat;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.mw-sidebar li a[href="Odrysian Kingdom.html"] {
+  background-image: linear-gradient(135deg, rgba(92, 61, 41, 0.9), rgba(208, 155, 86, 0.9)), url('images/odrysian.svg');
   background-size: 180% 180%, 55% 55%;
   background-position: center left, center right;
   background-repeat: no-repeat;
