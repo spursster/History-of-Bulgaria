@@ -20,22 +20,152 @@ document.addEventListener('DOMContentLoaded', function () {
       return rulersData;
     } catch (error) {
       console.error('Грешка при зареждане на владетелите:', error);
-      // Връщаме празен масив или fallback данни (ако искате, може да вградите няколко)
       rulersData = [];
       rulersLoaded = true;
       return rulersData;
     }
   }
 
-  // ===== СЛУЧАЕН ВЛАДЕТЕЛ =====
+  // ===== POLLINATIONS.AI – иконки за владетели =====
+  // Проверяваме дали pollinations.js вече е зареден (ако е включен чрез <script>)
+  // Ако не е, ще го заредим динамично при нужда.
+  let pollinationsLoaded = false;
+
+  function loadPollinationsScript() {
+    return new Promise((resolve, reject) => {
+      // Ако вече е зареден, връщаме веднага
+      if (typeof getRulerImageUrl !== 'undefined') {
+        pollinationsLoaded = true;
+        resolve();
+        return;
+      }
+      // Ако скриптът вече е добавен, но все още не е изпълнен
+      if (document.querySelector('script[src="pollinations.js"]')) {
+        // Изчакваме да се зареди
+        const checkLoaded = setInterval(() => {
+          if (typeof getRulerImageUrl !== 'undefined') {
+            clearInterval(checkLoaded);
+            pollinationsLoaded = true;
+            resolve();
+          }
+        }, 100);
+        // Таймаут за изчакване
+        setTimeout(() => {
+          clearInterval(checkLoaded);
+          reject(new Error('Времето за зареждане на pollinations.js изтече'));
+        }, 10000);
+        return;
+      }
+      // Добавяме скрипта
+      const script = document.createElement('script');
+      script.src = 'pollinations.js';
+      script.onload = () => {
+        pollinationsLoaded = true;
+        resolve();
+      };
+      script.onerror = () => {
+        reject(new Error('Неуспешно зареждане на pollinations.js'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  // Функция за генериране на URL за иконка (използваме, ако pollinations.js не е зареден)
+  function getFallbackImageUrl(name, page) {
+    const prompt = encodeURIComponent(
+      `portrait of ${name}, ${page} ruler, medieval character, detailed face, royal clothing, oil painting style`
+    );
+    return `https://image.pollinations.ai/prompt/${prompt}?width=128&height=128&nologo=true`;
+  }
+
+  // Зареждане на иконка в контейнер
+  async function loadRulerIcon(name, page, container) {
+    // Опитваме се да заредим pollinations.js
+    try {
+      await loadPollinationsScript();
+    } catch (e) {
+      console.warn('Pollinations не е зареден, използвам fallback URL');
+    }
+
+    // Кеш ключ
+    const cacheKey = `ruler_icon_${name}_${page}`;
+    const cached = localStorage.getItem(cacheKey);
+
+    if (cached) {
+      // Ако има кеширано изображение (data URL или URL)
+      container.innerHTML = `<img src="${cached}" alt="${name}" class="ruler-icon" loading="lazy">`;
+      return;
+    }
+
+    // Генериране на URL – използваме функцията от pollinations.js, ако е налична
+    let imageUrl;
+    if (typeof getRulerImageUrl === 'function') {
+      imageUrl = getRulerImageUrl(name, page);
+    } else {
+      imageUrl = getFallbackImageUrl(name, page);
+    }
+
+    // Предварително зареждане
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+
+    img.onload = function () {
+      // Запазваме като data URL за офлайн достъп
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const dataUrl = canvas.toDataURL('image/png');
+        localStorage.setItem(cacheKey, dataUrl);
+        container.innerHTML = `<img src="${dataUrl}" alt="${name}" class="ruler-icon" loading="lazy">`;
+      } catch (e) {
+        // Ако не може да се запази като data URL, запазваме оригиналния URL
+        localStorage.setItem(cacheKey, imageUrl);
+        container.innerHTML = `<img src="${imageUrl}" alt="${name}" class="ruler-icon" loading="lazy">`;
+      }
+    };
+
+    img.onerror = function () {
+      // При грешка – показваме placeholder
+      container.innerHTML = `<span class="ruler-icon-placeholder">${name.charAt(0)}</span>`;
+      // Запазваме placeholder в кеша, за да не опитваме отново
+      localStorage.setItem(cacheKey, 'placeholder');
+    };
+
+    img.src = imageUrl;
+  }
+
+  // Инициализиране на всички иконки на страницата
+  async function initRulerIcons() {
+    const containers = document.querySelectorAll('.ruler-icon-container');
+    for (const container of containers) {
+      const name = container.dataset.rulerName;
+      const page = container.dataset.rulerPage || 'History';
+      if (name) {
+        // Проверка дали вече не е заредено
+        if (container.querySelector('img, .ruler-icon-placeholder')) continue;
+        await loadRulerIcon(name, page, container);
+      }
+    }
+  }
+
+  // ===== ФОРМАТИРАНЕ НА КАРТА ЗА СЛУЧАЕН ВЛАДЕТЕЛ (с иконка) =====
   function formatRulerCard(ruler) {
     return `
+      <div class="ruler-icon-container" 
+           data-ruler-name="${ruler.name}" 
+           data-ruler-page="${ruler.page}"
+           style="width:80px;height:80px;border-radius:50%;overflow:hidden;float:left;margin-right:15px;background:#f0f0f0;flex-shrink:0;">
+      </div>
       <h2>${ruler.name}</h2>
       <p><strong>Източник:</strong> ${ruler.page}</p>
       <p>${ruler.description}</p>
     `;
   }
 
+  // ===== ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ =====
   async function createRandomRulerWidget() {
     const header = document.getElementById('top');
     if (!header) return;
@@ -59,56 +189,23 @@ document.addEventListener('DOMContentLoaded', function () {
         card.innerHTML = '<p>За съжаление няма налични данни за владетели.</p>';
         return;
       }
+
       const randomIndex = Math.floor(Math.random() * data.length);
       const ruler = data[randomIndex];
+
+      // Показваме картата с контейнер за иконка
       card.innerHTML = formatRulerCard(ruler);
+
+      // Инициализираме иконката в новодобавеното съдържание
+      const container = card.querySelector('.ruler-icon-container');
+      if (container) {
+        await loadRulerIcon(ruler.name, ruler.page, container);
+      }
+
       card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   }
-// В началото на script.js – зареждане на pollinations.js
-// (ако използвате модули)
-// import { initRulerIcons, showRulerWithIcon } from './pollinations.js';
 
-// Или с динамично зареждане на скрипта
-function loadPollinationsScript() {
-    return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'pollinations.js';
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-    });
-}
-
-// Променете функцията за случаен владетел
-button.addEventListener('click', async () => {
-    // Зареждаме pollinations.js, ако все още не е зареден
-    if (typeof loadRulerIcon === 'undefined') {
-        await loadPollinationsScript();
-    }
-    
-    let data = rulersLoaded ? rulersData : await loadRulersData();
-    if (!data || data.length === 0) {
-        card.innerHTML = '<p>За съжаление няма налични данни за владетели.</p>';
-        return;
-    }
-    
-    const randomIndex = Math.floor(Math.random() * data.length);
-    const ruler = data[randomIndex];
-    
-    // Показване на владетеля с иконка
-    card.innerHTML = ''; // Изчистваме картата
-    if (typeof showRulerWithIcon === 'function') {
-        showRulerWithIcon(ruler, card);
-    }
-    card.innerHTML += `
-        <h2>${ruler.name}</h2>
-        <p><strong>Източник:</strong> ${ruler.page}</p>
-        <p>${ruler.description}</p>
-    `;
-    
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-});
   // ===== ТЪРСЕНЕ И ХАЙЛАЙТ =====
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -270,7 +367,7 @@ button.addEventListener('click', async () => {
   }
 
   // ===== ИНИЦИАЛИЗАЦИЯ =====
-  // 1. Зареждаме данните за владетелите на заден план (без да чакаме)
+  // 1. Зареждаме данните за владетелите на заден план
   loadRulersData();
 
   // 2. Създаваме джаджата за случаен владетел
@@ -283,7 +380,6 @@ button.addEventListener('click', async () => {
   if (form && input && results && article) {
     form.addEventListener('submit', performSearch);
 
-    // Дебоунс за input – изчистване на highlights при празно поле
     const debouncedInput = debounce(function () {
       if (!input.value.trim()) {
         clearHighlights();
@@ -292,7 +388,12 @@ button.addEventListener('click', async () => {
     }, 300);
     input.addEventListener('input', debouncedInput);
 
-    // Инициализираме съобщението за търсене
     updateResults(0, '');
   }
+
+  // 5. Инициализираме иконките на всички владетели, които вече са на страницата
+  // Изчакваме малко, за да се зареди pollinations.js, ако е включен статично
+  setTimeout(() => {
+    initRulerIcons();
+  }, 500);
 });
