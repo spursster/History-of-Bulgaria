@@ -80,6 +80,80 @@ document.addEventListener('DOMContentLoaded', function () {
     updateResults(count, query);
   }
 
+  function resetCurrentNav() {
+    const currentNav = document.querySelectorAll('.mw-sidebar a.nav-button[aria-current="page"]');
+    currentNav.forEach((link) => link.removeAttribute('aria-current'));
+  }
+
+  function activateNavLink(link) {
+    if (!link) return;
+    resetCurrentNav();
+    link.setAttribute('aria-current', 'page');
+  }
+
+  function getHashFromHref(href) {
+    const index = href.indexOf('#');
+    return index >= 0 ? href.slice(index) : '';
+  }
+
+  function findNavLinkForHash(hash) {
+    if (!hash) {
+      return document.querySelector('.mw-sidebar a.nav-button[href="index.html"]');
+    }
+    const links = Array.from(document.querySelectorAll('.mw-sidebar a.nav-button'));
+    return links.find((link) => getHashFromHref(link.getAttribute('href')) === hash);
+  }
+
+  function updateCurrentNavByHash() {
+    const hash = window.location.hash;
+    const matchingLink = findNavLinkForHash(hash);
+    if (matchingLink) {
+      activateNavLink(matchingLink);
+      return;
+    }
+    if (!hash) {
+      activateNavLink(document.querySelector('.mw-sidebar a.nav-button[href="index.html"]'));
+    }
+  }
+
+  function initScrollSpy() {
+    const sectionLinks = Array.from(document.querySelectorAll('.mw-sidebar a.nav-button[href*="#"]'));
+    const sections = sectionLinks
+      .map((link) => {
+        const hash = getHashFromHref(link.getAttribute('href'));
+        return hash ? document.getElementById(hash.slice(1)) : null;
+      })
+      .filter(Boolean);
+
+    if (!sections.length) {
+      updateCurrentNavByHash();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const activeLink = findNavLinkForHash(`#${visible.target.id}`);
+        if (activeLink) {
+          activateNavLink(activeLink);
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5, 0.75, 1],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    updateCurrentNavByHash();
+    window.addEventListener('hashchange', updateCurrentNavByHash);
+  }
+
+  initScrollSpy();
+
   form.addEventListener('submit', performSearch);
   input.addEventListener('input', function () {
     if (!input.value.trim()) {
