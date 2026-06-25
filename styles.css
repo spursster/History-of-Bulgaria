@@ -128,7 +128,61 @@ a:hover {
 }
 
 .mw-sidebar li a {
-  color: var(--link);
+  display: block;
+  padding: 0.9rem 1rem;
+  color: #fff;
+  border-radius: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  text-align: center;
+  min-height: 3rem;
+  line-height: 1.35;
+}
+
+.mw-sidebar li a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  filter: brightness(1.05);
+}
+
+.mw-sidebar li a[href="#introduction"] {
+  background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
+}
+
+.mw-sidebar li a[href="#early-history"] {
+  background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
+}
+
+.mw-sidebar li a[href="#first-bulgarian-empire"] {
+  background: linear-gradient(135deg, #412a17 0%, #8d6e63 100%);
+}
+
+.mw-sidebar li a[href="#second-bulgarian-empire"] {
+  background: linear-gradient(135deg, #283593 0%, #5c6bc0 100%);
+}
+
+.mw-sidebar li a[href="#ottoman-period"] {
+  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
+}
+
+.mw-sidebar li a[href="#modern-history"] {
+  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
+}
+
+.mw-sidebar li a[href="macedonian-empire.html"] {
+  background: linear-gradient(135deg, #4e342e 0%, #bcaaa4 100%);
+}
+
+.mw-sidebar li a[href="volga-bulgaria.html"] {
+  background: linear-gradient(135deg, #1565c0 0%, #64b5f6 100%);
+}
+
+.mw-sidebar li a[href="staro-velika-bulgaria.html"] {
+  background: linear-gradient(135deg, #795548 0%, #d7ccc8 100%);
 }
 
 .mw-content {
