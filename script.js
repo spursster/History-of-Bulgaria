@@ -397,3 +397,63 @@ document.addEventListener('DOMContentLoaded', function () {
     initRulerIcons();
   }, 500);
 });
+
+// ===== CHATANGO ЧАТ В СТРАНИЧНАТА ЛЕНТА =====
+function loadChatango() {
+    const sidebar = document.querySelector('.mw-sidebar');
+    if (!sidebar) return;
+
+    // Проверка дали чатът вече е добавен
+    if (document.getElementById('chatango-container')) return;
+
+    // Създаваме контейнер за чата
+    const chatContainer = document.createElement('div');
+    chatContainer.id = 'chatango-container';
+    chatContainer.style.marginTop = '1.5rem';
+    chatContainer.style.borderTop = '1px solid var(--border)';
+    chatContainer.style.paddingTop = '1rem';
+
+    // Заглавие над чата
+    const chatTitle = document.createElement('p');
+    chatTitle.style.fontWeight = 'bold';
+    chatTitle.style.marginBottom = '0.5rem';
+    chatTitle.textContent = '💬 Исторически чат';
+    chatContainer.appendChild(chatTitle);
+
+    // Създаваме скрипт елемент за Chatango
+    const script = document.createElement('script');
+    script.id = 'cid0020000443405969716';
+    script.setAttribute('data-cfasync', 'false');
+    script.async = true;
+    script.src = '//st.chatango.com/js/gz/emb.js';
+    script.style.width = '250px';
+    script.style.height = '350px';
+    // Конфигурацията на чата – подава се като текст
+    script.textContent = JSON.stringify({
+        handle: 'bulgariahistory',
+        arch: 'js',
+        styles: {
+            a: '000000',
+            b: 100,
+            c: 'FFFFFF',
+            d: 'FFFFFF',
+            k: '000000',
+            l: '000000',
+            m: '000000',
+            n: 'FFFFFF',
+            p: '10',
+            q: '000000',
+            r: 100,
+            fwtickm: 1
+        }
+    });
+
+    chatContainer.appendChild(script);
+    sidebar.appendChild(chatContainer);
+}
+
+// Извикваме функцията след като DOM е готов
+document.addEventListener('DOMContentLoaded', function() {
+    // ... останалият ви код ...
+    loadChatango();
+});
