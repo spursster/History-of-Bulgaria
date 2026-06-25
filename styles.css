@@ -179,24 +179,48 @@ a:hover {
   text-shadow: 0 1px 2px rgba(0,0,0,0.55);
 }
 
+.mw-sidebar li a[href="Wallachia.html"] {
+  background-image: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg');
+  background-size: 180% 180%, 55% 55%;
+  background-position: center left, center right;
+  background-repeat: no-repeat;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.mw-sidebar li a[href="macedonian-empire.html"] {
+  background-image: linear-gradient(135deg, rgba(79, 38, 48, 0.9), rgba(168, 97, 77, 0.9)), url('images/macedonia.svg');
+  background-size: 180% 180%, 55% 55%;
+  background-position: center left, center right;
+  background-repeat: no-repeat;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.mw-sidebar li a[href="volga-bulgaria.html"] {
+  background-image: linear-gradient(135deg, rgba(8, 57, 89, 0.9), rgba(80, 145, 188, 0.9)), url('images/volga.svg');
+  background-size: 180% 180%, 55% 55%;
+  background-position: center left, center right;
+  background-repeat: no-repeat;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
+.mw-sidebar li a[href="staro-velika-bulgaria.html"] {
+  background-image: linear-gradient(135deg, rgba(78, 58, 27, 0.9), rgba(171, 145, 93, 0.9)), url('images/staro-velika.svg');
+  background-size: 180% 180%, 55% 55%;
+  background-position: center left, center right;
+  background-repeat: no-repeat;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+}
+
 .mw-sidebar li a[href="#ottoman-period"] {
   background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
 }
 
 .mw-sidebar li a[href="#modern-history"] {
   background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
-}
-
-.mw-sidebar li a[href="macedonian-empire.html"] {
-  background: linear-gradient(135deg, #4e342e 0%, #bcaaa4 100%);
-}
-
-.mw-sidebar li a[href="volga-bulgaria.html"] {
-  background: linear-gradient(135deg, #1565c0 0%, #64b5f6 100%);
-}
-
-.mw-sidebar li a[href="staro-velika-bulgaria.html"] {
-  background: linear-gradient(135deg, #795548 0%, #d7ccc8 100%);
 }
 
 .mw-content {

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Герб на Стара Велика България">
+  <defs>
+    <linearGradient id="staroBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#564b1c"/>
+      <stop offset="100%" stop-color="#8f7f3a"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="20" ry="20" fill="url(#staroBg)"/>
+  <path d="M60 28 L80 56 L60 84 L40 56 Z" fill="#f5f5dc"/>
+  <circle cx="60" cy="56" r="10" fill="#564b1c"/>
+  <path d="M60 84 L60 104" stroke="#f5f5dc" stroke-width="8" stroke-linecap="round"/>
+</svg>
