@@ -145,6 +145,51 @@ a:hover {
   font-size: 0.95rem;
 }
 
+.random-ruler-widget {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.random-ruler-button {
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #0645ad;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.random-ruler-button:hover {
+  background: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.random-ruler-card {
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  color: var(--text);
+}
+
+.random-ruler-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.random-ruler-card p {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.random-ruler-card strong {
+  color: var(--text);
+}
+
 .search-highlight {
   background: #ffe58d;
   padding: 0 0.1rem;
