@@ -572,3 +572,59 @@ footer {
     page-break-inside: avoid;
   }
 }
+/* Иконки на владетели */
+.ruler-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.ruler-icon-container {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e8e8e8;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease;
+}
+
+.ruler-icon-container:hover {
+    transform: scale(1.05);
+}
+
+.ruler-icon-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #666;
+    background: #d4d4d4;
+    border-radius: 50%;
+}
+
+/* В картата на случайния владетел */
+.random-ruler-card .ruler-icon-container {
+    float: left;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+    .ruler-icon-container {
+        width: 60px;
+        height: 60px;
+    }
+    .random-ruler-card .ruler-icon-container {
+        float: none;
+        margin: 0 auto 10px;
+        display: block;
+    }
+}
