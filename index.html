@@ -11,13 +11,13 @@
 <body>
   <div id="page">
     <a class="skip-link" href="#content">Прескочи към съдържанието</a>
-    <header id="top">
+        <header id="top">
       <div class="site-title">
-        <a href="#">Историята на България</a>
-        <p class="site-tagline">Енциклопедична статия за българската история, организирана по периоди и важни теми.</p>
+        <a href="index.html">Историята на България</a>
+        <p class="site-tagline">Енциклопедична колекция от статии за българската история и свързаните държави.</p>
       </div>
       <form class="searchbox" action="#" method="get" role="search">
-        <label for="search" class="sr-only">Търсене в енциклопедията</label>
+        <label for="search" class="sr-only">Търсене в текста на страницата</label>
         <input id="search" type="search" name="q" placeholder="Търсене в статията...">
         <button type="submit">Търси</button>
       </form>
@@ -28,20 +28,23 @@
       <aside class="mw-sidebar" aria-label="Навигация">
         <h2>Навигация</h2>
         <ul>
-          <li><a class="nav-button" href="#introduction">Въведение</a></li>
-          <li><a class="nav-button" href="#early-history">Древна и ранна история</a></li>
-          <li><a class="nav-button" href="#first-bulgarian-empire">Първа българска държава</a></li>
+          <li><a class="nav-button" aria-current="page" href="index.html">Начало</a></li>
+          <li><a class="nav-button" href="Old Great Bulgaria.html">Стара Велика България</a></li>
           <li><a class="nav-button" href="Second Bulgarian Empire.html">Втора българска държава</a></li>
+          <li><a class="nav-button" href="volga-bulgaria.html">Волжка България</a></li>
           <li><a class="nav-button" href="Wallachia.html">Влашко</a></li>
           <li><a class="nav-button" href="Odrysian Kingdom.html">Одриско Царство</a></li>
-          <li><a class="nav-button" href="#modern-history">Модерна история</a></li>
           <li><a class="nav-button" href="macedonian-empire.html">Македонско Царство</a></li>
-          <li><a class="nav-button" href="volga-bulgaria.html">Волжка България</a></li>
-          <li><a class="nav-button" href="Old Great Bulgaria.html">Стара Велика България</a></li>
         </ul>
       </aside>
 
-      <div class="infobox" aria-label="Инфобокс">
+      <main class="mw-content" id="content">
+        <article>
+          <header class="mw-page-header">
+            <h1>Историята на България</h1>
+          </header>
+
+          <div class="infobox" aria-label="Инфобокс">
             <table>
               <caption>България</caption>
               <tr>
@@ -84,10 +87,6 @@
               <li><a href="#references">7 Източници</a></li>
             </ol>
           </nav>
-
-          <section id="introduction" class="intro">
-            <p>Тази статия представя историята на България като добре структурирана енциклопедична публикация. Текстът е организиран чрез основни исторически периоди, тематични подраздели и ключови факти, подобно на стилa на Уикипедия.</p>
-          </section>
 
           <section id="early-history">
             <h2>Древна и ранна история</h2>
@@ -277,5 +276,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
