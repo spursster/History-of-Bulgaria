@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const results = document.getElementById('search-results');
   const article = document.querySelector('article');
 
+  if (!form || !input || !results || !article) {
+    return;
+  }
+
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
