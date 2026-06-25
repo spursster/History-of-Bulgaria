@@ -1,0 +1,14 @@
+{
+  "name": "bulgarian-history",
+  "scripts": {
+    "build": "npm run minify-css && npm run minify-js && npm run optimize-images",
+    "minify-css": "cssnano css/styles.css css/styles.min.css",
+    "minify-js": "uglifyjs js/script.js -o js/script.min.js -c -m",
+    "optimize-images": "imagemin images/*.{svg,png,jpg} --out-dir=images/optimized"
+  },
+  "devDependencies": {
+    "cssnano": "^6.0.0",
+    "uglify-js": "^3.17.0",
+    "imagemin-cli": "^7.0.0"
+  }
+}
