@@ -1,4 +1,7 @@
-/* Wikipedia-like encyclopedia layout */
+/* ============================================================
+   Wikipedia-like encyclopedia layout – ОПТИМИЗИРАНА ВЕРСИЯ
+   ============================================================ */
+
 :root {
   --bg: #f8f9fa;
   --paper: #ffffff;
@@ -8,8 +11,16 @@
   --link: #0645ad;
   --link-hover: #0b0080;
   --accent: #f5f5f5;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 20px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 18px 36px rgba(0, 0, 0, 0.2);
+  --transition: 0.2s ease;
 }
 
+/* ----- RESET & БАЗА ----- */
 * {
   box-sizing: border-box;
 }
@@ -23,6 +34,28 @@ html {
   scroll-behavior: smooth;
 }
 
+/* За хора с намалено движение – премахваме анимациите */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7f9fc 0%, #eef4f9 100%);
+}
+
+/* ----- СКРИТИ ЕЛЕМЕНТИ (само за четци) ----- */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -35,13 +68,7 @@ html {
   border: 0;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f7f9fc 0%, #eef4f9 100%);
-}
-
+/* ----- SKIP LINK (достъпност) ----- */
 .skip-link {
   position: absolute;
   left: -999px;
@@ -60,30 +87,33 @@ body {
   width: auto;
   height: auto;
   padding: 0.75rem 1rem;
-  background: #0645ad;
+  background: var(--link);
   color: #fff;
   z-index: 1000;
   clip: auto;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   box-shadow: 0 0 0 4px rgba(6, 69, 173, 0.25);
+  font-weight: 600;
 }
 
+/* ----- ЛИНКОВЕ ----- */
 a {
   color: var(--link);
   text-decoration: none;
 }
-
 a:hover {
   color: var(--link-hover);
   text-decoration: underline;
 }
 
+/* ----- СТРАНИЦА (обвивка) ----- */
 #page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 1.25rem 2rem;
 }
 
+/* ----- ХЕДЪР ----- */
 #top {
   border-bottom: 1px solid var(--border);
   padding-bottom: 1rem;
@@ -96,55 +126,65 @@ a:hover {
   flex-wrap: wrap;
   gap: 1rem;
 }
-
 .site-title a {
   color: var(--text);
   font-size: 2rem;
   font-weight: 700;
 }
-
 .site-tagline {
   margin: 0;
   color: var(--muted);
   font-size: 0.95rem;
 }
 
+/* ----- ТЪРСАЧКА ----- */
 .searchbox {
   margin-top: 1rem;
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
-
 .searchbox input[type="search"] {
   flex: 1 1 220px;
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  transition: border-color var(--transition), box-shadow var(--transition);
 }
-
+.searchbox input[type="search"]:focus {
+  border-color: var(--link);
+  box-shadow: 0 0 0 3px rgba(6, 69, 173, 0.15);
+  outline: none;
+}
 .searchbox button {
   padding: 0.55rem 1rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: #f8f9fa;
   cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
 }
-
 .searchbox button:hover {
   background: #ebeff2;
 }
+.searchbox button:focus-visible {
+  outline: 3px solid rgba(6, 69, 173, 0.65);
+  outline-offset: 2px;
+}
 
+/* ----- РЕЗУЛТАТИ ОТ ТЪРСЕНЕТО ----- */
 .search-results {
   margin-top: 0.75rem;
   padding: 0.85rem 1rem;
   background: #eef4ff;
   border: 1px solid #bbe0ff;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
   color: #0f3f6f;
   font-size: 0.95rem;
 }
 
+/* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ ----- */
 .random-ruler-widget {
   margin-top: 1rem;
   display: grid;
@@ -153,243 +193,202 @@ a:hover {
 
 .random-ruler-button {
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-lg);
   padding: 0.85rem 1rem;
-  background: #0645ad;
+  background: var(--link);
   color: #fff;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background var(--transition), transform var(--transition),
+    box-shadow var(--transition);
 }
-
 .random-ruler-button:hover {
   background: #0b5ed7;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.random-ruler-button:focus-visible {
+  outline: 3px solid rgba(6, 69, 173, 0.65);
+  outline-offset: 3px;
 }
 
 .random-ruler-card {
   border: 1px solid var(--border);
-  background: #fff;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  background: var(--paper);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   color: var(--text);
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .random-ruler-card h2 {
   margin: 0 0 0.5rem;
   font-size: 1.15rem;
 }
-
 .random-ruler-card p {
   margin: 0 0 0.75rem;
   line-height: 1.5;
 }
-
 .random-ruler-card strong {
   color: var(--text);
 }
 
+/* ----- ХАЙЛАЙТ (търсене) ----- */
 .search-highlight {
   background: #ffe58d;
   padding: 0 0.1rem;
   border-radius: 0.25rem;
+  box-decoration-break: clone;
 }
 
+/* ----- ОСНОВНО ТЕЛО (grid) ----- */
 .mw-body {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 1.5rem;
 }
 
+/* ----- СТРАНИЧНА НАВИГАЦИЯ ----- */
 .mw-sidebar {
   background: var(--paper);
   padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   position: sticky;
   top: 1rem;
   max-height: calc(100vh - 2rem);
   overflow: auto;
 }
-
 .mw-sidebar h2 {
   margin-top: 0;
   font-size: 1rem;
   color: var(--text);
 }
-
 .mw-sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0.75rem 0 0;
 }
-
 .mw-sidebar li {
   margin-bottom: 0.5rem;
 }
 
+/* ----- НАВИГАЦИОННИ БУТОНИ (общи + специфични) ----- */
 .mw-sidebar li a {
   display: block;
   padding: 0.9rem 1rem;
   color: #fff;
-  border-radius: 0.85rem;
+  border-radius: var(--radius-lg);
   font-weight: 600;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition), box-shadow var(--transition),
+    filter var(--transition);
+  background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   text-decoration: none;
   text-align: center;
   min-height: 3rem;
   line-height: 1.35;
-}
-
-.mw-sidebar li a.nav-button {
-  padding: 1rem 1.1rem;
   letter-spacing: 0.02em;
 }
-
-/* stronger hover + icon scale for nav buttons */
-.mw-sidebar li a.nav-button:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 18px 36px rgba(0,0,0,0.2);
-}
-
-.mw-sidebar li a[aria-current="page"] {
-  background: linear-gradient(135deg, #0645ad, #072a66);
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.85), 0 18px 36px rgba(0,0,0,0.2);
-  transform: translateY(-2px);
-}
-
-/* ensure SVG backgrounds remain crisp on high-dpi */
-.mw-sidebar li a {
-  background-repeat: no-repeat;
-  background-size: contain;
-}
-
 .mw-sidebar li a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
   filter: brightness(1.05);
 }
-
-.mw-sidebar li a[href="#introduction"] {
-  background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
-}
-
-.mw-sidebar li a[href="#early-history"] {
-  background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
-}
-
-.mw-sidebar li a[href="#first-bulgarian-empire"] {
-  background-image: linear-gradient(180deg, rgba(20,12,6,0.35), rgba(80,48,24,0.25)), url('images/first-bulgaria.svg');
-  background-size: cover;
-  background-position: center right;
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
-}
-
-.mw-sidebar li a[href="Second Bulgarian Empire.html"] {
-  background-image: linear-gradient(135deg, rgba(40, 53, 147, 0.8), rgba(92, 107, 192, 0.8)), url('images/second-bulgaria.svg');
-  background-size: 180% 180%, 60% 60%;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
-
-.mw-sidebar li a[href="Wallachia.html"] {
-  background-image: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg');
-  background-size: 180% 180%, 55% 55%;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
-
-.mw-sidebar li a[href="Odrysian Kingdom.html"] {
-  background-image: linear-gradient(135deg, rgba(92, 61, 41, 0.9), rgba(208, 155, 86, 0.9)), url('images/odrysian.svg');
-  background-size: 180% 180%, 55% 55%;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
-
-.mw-sidebar li a[href="macedonian-empire.html"] {
-  background-image: linear-gradient(135deg, rgba(79, 38, 48, 0.9), rgba(168, 97, 77, 0.9)), url('images/macedonia.svg');
-  background-size: 180% 180%, 55% 55%;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
-
-.mw-sidebar li a[href="volga-bulgaria.html"] {
-  background-image: linear-gradient(135deg, rgba(8, 57, 89, 0.9), rgba(80, 145, 188, 0.9)), url('images/volga.svg');
-  background-size: 180% 180%, 55% 55%;
-  background-position: center left, center right;
-  background-repeat: no-repeat;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.55);
-}
-
-.mw-sidebar li a[href="Old Great Bulgaria.html"] {
-  background-image: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg');
-  background-size: cover, 55% 55%;
-  background-position: center center, center right;
-  background-repeat: no-repeat;
-  background-blend-mode: multiply;
-  color: #fff;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.65);
-  font-weight: 700;
-}
-
-.mw-sidebar li a[href="#ottoman-period"] {
-  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
-}
-
-.mw-sidebar li a[href="#modern-history"] {
-  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
-}
-
-.mw-content {
-  background: var(--paper);
-  padding: 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  scroll-margin-top: 1.5rem;
-}
-
-.searchbox input[type="search"]:focus,
-.searchbox button:focus,
 .mw-sidebar li a:focus-visible {
   outline: 3px solid rgba(6, 69, 173, 0.65);
   outline-offset: 3px;
 }
 
+/* Активна страница */
+.mw-sidebar li a[aria-current="page"] {
+  background: linear-gradient(135deg, #0645ad, #072a66) !important;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.85), var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* ----- СПЕЦИФИЧНИ ФОНОВЕ ЗА БУТОНИТЕ (shorthand) ----- */
+.mw-sidebar li a[href="#introduction"] {
+  background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
+}
+.mw-sidebar li a[href="#early-history"] {
+  background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
+}
+.mw-sidebar li a[href="#first-bulgarian-empire"] {
+  background: linear-gradient(180deg, rgba(20, 12, 6, 0.35), rgba(80, 48, 24, 0.25)), url('images/first-bulgaria.svg') no-repeat center right / cover;
+}
+.mw-sidebar li a[href="Second Bulgarian Empire.html"] {
+  background: linear-gradient(135deg, rgba(40, 53, 147, 0.8), rgba(92, 107, 192, 0.8)), url('images/second-bulgaria.svg') no-repeat center right / 60% 60%;
+}
+.mw-sidebar li a[href="Wallachia.html"] {
+  background: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="Odrysian Kingdom.html"] {
+  background: linear-gradient(135deg, rgba(92, 61, 41, 0.9), rgba(208, 155, 86, 0.9)), url('images/odrysian.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="macedonian-empire.html"] {
+  background: linear-gradient(135deg, rgba(79, 38, 48, 0.9), rgba(168, 97, 77, 0.9)), url('images/macedonia.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="volga-bulgaria.html"] {
+  background: linear-gradient(135deg, rgba(8, 57, 89, 0.9), rgba(80, 145, 188, 0.9)), url('images/volga.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="Old Great Bulgaria.html"] {
+  background: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg') no-repeat center right / 55% 55%;
+  background-blend-mode: multiply;
+}
+.mw-sidebar li a[href="#ottoman-period"] {
+  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
+}
+.mw-sidebar li a[href="#modern-history"] {
+  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
+}
+
+/* ----- ОСНОВНО СЪДЪРЖАНИЕ ----- */
+.mw-content {
+  background: var(--paper);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  scroll-margin-top: 1.5rem;
+}
+
 .mw-page-header {
   margin-bottom: 1rem;
 }
-
 .mw-page-header h1 {
   margin: 0 0 0.5rem;
   font-size: 2.25rem;
 }
 
+/* ----- ХАТНОТ (предупреждение/бележка) ----- */
 .hatnote {
   display: inline-block;
   margin-bottom: 1rem;
   padding: 0.45rem 0.75rem;
   background: var(--accent);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: var(--muted);
+  font-size: 0.95rem;
 }
 
+/* ----- ИНФОБОКС ----- */
 .infobox {
   float: right;
   width: 240px;
@@ -398,108 +397,102 @@ a:hover {
   background: #f8f8f8;
   font-size: 0.95rem;
   line-height: 1.4;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
 }
-
 .infobox table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .infobox th,
 .infobox td {
   padding: 0.55rem;
   border-bottom: 1px solid #dfe1e4;
 }
-
 .infobox th {
   background: #e9ecef;
   font-weight: 600;
   text-align: left;
 }
-
 .infobox caption {
   font-weight: 700;
   margin-bottom: 0.5rem;
+  padding: 0.55rem;
+  background: #e9ecef;
+  border-bottom: 1px solid #dfe1e4;
 }
 
-.intro p {
-  margin: 0 0 1rem;
-  text-align: justify;
-}
-
+/* ----- СЪДЪРЖАНИЕ (TOC) ----- */
 .toc {
   background: var(--accent);
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 1rem;
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
 }
-
 .toc h2 {
   margin-top: 0;
   font-size: 1rem;
 }
-
-.toc ol {
+.toc ol,
+.toc ul {
   margin: 0.5rem 0 0;
   padding-left: 1.2rem;
 }
-
 .toc li {
   margin-bottom: 0.4rem;
 }
 
+/* ----- ЗАГЛАВИЯ В СТАТИЯТА ----- */
 .mw-content h2 {
   border-bottom: 1px solid #dfe1e4;
   padding-bottom: 0.4rem;
   margin-top: 1.8rem;
 }
-
 .mw-content h3 {
   margin-top: 1.4rem;
 }
-
 .mw-content ul,
 .mw-content ol {
   margin: 0.5rem 0 1rem 1.25rem;
 }
-
 .mw-content blockquote {
   margin: 1rem 0;
   padding: 0.75rem 1rem;
   border-left: 4px solid #dfe1e4;
   background: #f8f8f8;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
-.references {
-  margin-top: 2rem;
-}
-
-.references ol {
-  padding-left: 1.25rem;
-}
-
+/* ----- КАРТИ / ФИГУРИ ----- */
 .map-figure {
   margin: 1.5rem 0;
   padding: 0.9rem;
   background: #f7f8fb;
   border: 1px solid var(--border);
-  border-radius: 0.6rem;
+  border-radius: var(--radius-md);
 }
-
 .map-figure img {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-md);
 }
-
 .map-figure figcaption {
   margin-top: 0.75rem;
   color: var(--muted);
   font-size: 0.95rem;
 }
 
+/* ----- ИЗТОЧНИЦИ (REFERENCES) ----- */
+.references {
+  margin-top: 2rem;
+}
+.references ol {
+  padding-left: 1.25rem;
+}
+
+/* ----- ФУТЪР ----- */
 footer {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -508,36 +501,74 @@ footer {
   font-size: 0.95rem;
 }
 
+/* ============================================================
+   RESPONSIVE (до 900px)
+   ============================================================ */
 @media (max-width: 900px) {
   .mw-body {
     grid-template-columns: 1fr;
   }
-
   .mw-sidebar {
     position: static;
     max-height: none;
   }
-
   .mw-sidebar li a {
     min-height: auto;
     padding: 0.85rem 0.95rem;
   }
-
   .site-title {
     gap: 0.5rem;
   }
-
   .site-title a {
     font-size: 1.8rem;
   }
-
   .searchbox {
     flex-direction: column;
   }
-
   .infobox {
     float: none;
     width: 100%;
     margin: 0 0 1rem;
+  }
+}
+
+/* ============================================================
+   PRINT СТИЛОВЕ (при отпечатване)
+   ============================================================ */
+@media print {
+  #top,
+  .mw-sidebar,
+  .random-ruler-widget,
+  .search-results,
+  .searchbox,
+  .toc,
+  footer,
+  .skip-link {
+    display: none !important;
+  }
+  .mw-body {
+    display: block !important;
+  }
+  .mw-content {
+    border: none !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  .infobox {
+    float: right !important;
+    width: 200px !important;
+    margin: 0 0 1rem 1rem !important;
+    border: 1px solid #aaa !important;
+    box-shadow: none !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: underline !important;
+  }
+  .mw-content h2 {
+    page-break-after: avoid;
+  }
+  .mw-content section {
+    page-break-inside: avoid;
   }
 }
