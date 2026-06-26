@@ -6,39 +6,22 @@
   <meta name="description" content="Сборник от старобългарски летописи – оригинални текстове без съвременна редакция.">
   <title>Летописи – Историята на България</title>
   <link rel="stylesheet" href="../styles.css">
-  <!-- Hypothesis (за коментари върху текст) -->
-  <script src="https://hypothes.is/embed.js" async></script>
-  <!-- Pollinations (иконки) -->
-  <script src="../pollinations.js"></script>
-  <style>
-    /* Временен стил, докато се заредят компонентите – показваме loading */
-    #header-container, #sidebar-container, #footer-container {
-      min-height: 50px;
-    }
-    .loading-placeholder {
-      color: var(--muted);
-      text-align: center;
-      padding: 1rem;
-    }
-  </style>
+  <!-- Централизиран скрипт – зарежда всичко -->
+  <script src="../js/bundle.js" defer></script>
 </head>
 <body>
   <div id="page">
 
     <a class="skip-link" href="#content">Прескочи към съдържанието</a>
 
-    <!-- ===== ХЕДЪР (зарежда се от includes/header.html) ===== -->
-    <div id="header-container">
-      <div class="loading-placeholder">⏳ Зареждане на хедъра...</div>
-    </div>
+    <!-- ===== ХЕДЪР – зарежда се от includes/header.html ===== -->
+    <div id="header-container"></div>
 
     <!-- ===== ОСНОВЕН ГРИД ===== -->
     <div class="mw-body">
 
       <!-- ===== СТРАНИЧНА НАВИГАЦИЯ (зарежда се от includes/sidebar.html) ===== -->
-      <div id="sidebar-container">
-        <div class="loading-placeholder">⏳ Зареждане на навигацията...</div>
-      </div>
+      <div id="sidebar-container"></div>
 
       <!-- ===== ОСНОВНО СЪДЪРЖАНИЕ ===== -->
       <main class="mw-content" id="content">
@@ -90,69 +73,9 @@
       </main>
     </div>
 
-    <!-- ===== ФУТЪР (зарежда се от includes/footer.html) ===== -->
-    <div id="footer-container">
-      <div class="loading-placeholder">⏳ Зареждане на футъра...</div>
-    </div>
+    <!-- ===== ФУТЪР – зарежда се от includes/footer.html ===== -->
+    <div id="footer-container"></div>
 
   </div> <!-- /#page -->
-
-  <!-- ===== СКРИПТ ЗА ЗАРЕЖДАНЕ НА КОМПОНЕНТИТЕ ===== -->
-  <script>
-    // Функция за зареждане на HTML компонент
-    async function loadComponent(elementId, filePath) {
-      try {
-        const response = await fetch(filePath);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const html = await response.text();
-        document.getElementById(elementId).innerHTML = html;
-        return true;
-      } catch (error) {
-        console.error(`Грешка при зареждане на ${filePath}:`, error);
-        document.getElementById(elementId).innerHTML = `<p style="color:red; padding:1rem;">❌ Грешка при зареждане на компонента.</p>`;
-        return false;
-      }
-    }
-
-    // Зареждаме всички компоненти паралелно
-    async function loadAllComponents() {
-      await Promise.all([
-        loadComponent('header-container', '../includes/header.html'),
-        loadComponent('sidebar-container', '../includes/sidebar.html'),
-        loadComponent('footer-container', '../includes/footer.html')
-      ]);
-
-      // След като sidebar-ът се зареди, маркираме активния бутон
-      const sidebarLinks = document.querySelectorAll('#sidebar-container .nav-button');
-      sidebarLinks.forEach(link => {
-        // Ако href сочи към letopisi/index.html или завършва на /letopisi/
-        if (link.getAttribute('href') === 'index.html' || link.getAttribute('href') === '') {
-          link.setAttribute('aria-current', 'page');
-        }
-      });
-
-      // Инициализираме всички скриптове, които разчитат на DOM елементи (търсене, иконки, чат)
-      // Тъй като script.js вече е зареден, но компонентите се зареждат след това,
-      // трябва да извикаме функциите ръчно, ако не работят автоматично.
-      if (typeof initRulerIcons === 'function') {
-        setTimeout(initRulerIcons, 300);
-      }
-      if (typeof initMobileSearchToggle === 'function') {
-        initMobileSearchToggle();
-      }
-      if (typeof loadChatango === 'function') {
-        loadChatango();
-      }
-    }
-
-    // Стартираме зареждането, след като DOM е готов
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadAllComponents);
-    } else {
-      loadAllComponents();
-    }
-  </script>
-
-<script src="js/bundle.js" defer></script>
 </body>
 </html>
