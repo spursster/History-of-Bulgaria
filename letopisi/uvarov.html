@@ -6,50 +6,22 @@
   <meta name="description" content="Оригиналният старобългарски текст на Именника на българските владетели – Уваров препис (XV век).">
   <title>Именник на българските владетели – Уваров препис</title>
   <link rel="stylesheet" href="../styles.css">
-  <!-- Hypothesis (коментари върху текст) -->
-  <script src="https://hypothes.is/embed.js" async></script>
+  <!-- Централизиран скрипт – зарежда всичко -->
+  <script src="../js/bundle.js" defer></script>
 </head>
 <body>
   <div id="page">
 
     <a class="skip-link" href="#content">Прескочи към съдържанието</a>
 
-    <!-- ===== ХЕДЪР ===== -->
-    <header id="top">
-      <div class="site-title">
-        <a href="../index.html">Историята на България</a>
-        <p class="site-tagline">Енциклопедична колекция от статии за българската история и свързаните държави.</p>
-        <!-- Бутон за мобилно търсене -->
-        <button type="button" class="search-toggle" aria-label="Търсене" title="Търсене">🔍</button>
-      </div>
-      <div class="searchbox-wrapper">
-        <form class="searchbox" action="#" method="get" role="search">
-          <label for="search" class="sr-only">Търсене в текста на страницата</label>
-          <input id="search" type="search" name="q" placeholder="Търсене...">
-          <button type="submit">Търси</button>
-        </form>
-        <div id="search-results" class="search-results" role="status" aria-live="polite"></div>
-      </div>
-    </header>
+    <!-- ===== ХЕДЪР – зарежда се от includes/header.html ===== -->
+    <div id="header-container"></div>
 
     <!-- ===== ОСНОВЕН ГРИД ===== -->
     <div class="mw-body">
 
-      <!-- ===== СТРАНИЧНА НАВИГАЦИЯ ===== -->
-      <aside class="mw-sidebar" aria-label="Навигация">
-        <h2>Навигация</h2>
-        <ul>
-          <li><a class="nav-button" href="../index.html">Начало</a></li>
-          <li><a class="nav-button" href="../index.html#first-bulgarian-empire">Първа българска държава</a></li>
-          <li><a class="nav-button" href="../Old Great Bulgaria.html">Стара Велика България</a></li>
-          <li><a class="nav-button" href="../Second Bulgarian Empire.html">Втора българска държава</a></li>
-          <li><a class="nav-button" href="../volga-bulgaria.html">Волжка България</a></li>
-          <li><a class="nav-button" href="../Wallachia.html">Влашко</a></li>
-          <li><a class="nav-button" href="../Odrysian Kingdom.html">Одриско Царство</a></li>
-          <li><a class="nav-button" href="../macedonian-empire.html">Македонско Царство</a></li>
-          <li><a class="nav-button" aria-current="page" href="uvarov.html">📜 Именник (Уваров)</a></li>
-        </ul>
-      </aside>
+      <!-- ===== СТРАНИЧНА НАВИГАЦИЯ – зарежда се от includes/sidebar.html ===== -->
+      <div id="sidebar-container"></div>
 
       <!-- ===== ОСНОВНО СЪДЪРЖАНИЕ ===== -->
       <main class="mw-content" id="content">
@@ -113,7 +85,7 @@
             </p>
           </section>
 
-          <!-- ===== КРАТЪК КОМЕНТАР (по желание) ===== -->
+          <!-- ===== КРАТЪК КОМЕНТАР ===== -->
           <section style="margin-top: 2rem; background: var(--accent); padding: 1rem 1.5rem; border-radius: var(--radius-sm); border-left: 4px solid #b3884a;">
             <p style="margin: 0; font-size: 0.95rem;">
               <strong>📖 За текста:</strong> Това е най-старият запазен препис на Именника.
@@ -138,15 +110,10 @@
       </main>
     </div>
 
-    <!-- ===== ФУТЪР ===== -->
-    <footer>
-      <p>Оригинален старобългарски текст на Именника – Уваров препис (XV век). Страницата е част от енциклопедичния проект „Историята на България“.</p>
-    </footer>
+    <!-- ===== ФУТЪР – зарежда се от includes/footer.html ===== -->
+    <div id="footer-container"></div>
 
   </div> <!-- /#page -->
-
-  <!-- ===== СКРИПТОВЕ ===== -->
-  <!-- Pollinations (иконки) и основен script -->
- <script src="js/bundle.js" defer></script>
+  <!-- Централизираният скрипт се зарежда от <head> (js/bundle.js) -->
 </body>
 </html>
