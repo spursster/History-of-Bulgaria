@@ -485,17 +485,14 @@ function addAnnotationCounters(annotations) {
   const articleElem = document.querySelector('article');
   if (!articleElem) return;
 
-  // Обхождаме само текстовите възли, които НЕ са вътре в Hypothesis елементи
   const walker = document.createTreeWalker(
     articleElem,
     NodeFilter.SHOW_TEXT,
     {
       acceptNode: function(node) {
-        // Пропускаме текст вътре в анотациите на Hypothesis
         if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight, .annotator-hl')) {
           return NodeFilter.FILTER_REJECT;
         }
-        // Пропускаме скрити елементи
         if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
           return NodeFilter.FILTER_REJECT;
         }
@@ -516,53 +513,86 @@ function addAnnotationCounters(annotations) {
     for (const textNode of textNodes) {
       const nodeText = textNode.nodeValue;
       if (nodeText.includes(searchText)) {
-        // Създаваме брояч като отделен елемент, който да поставим СЛЕД маркирания текст
+        // Създаваме брояч
         const counter = document.createElement('sup');
         counter.className = 'hypothesis-counter';
         counter.textContent = `(${count})`;
         counter.title = `${count} коментар(а) – кликнете за да видите`;
 
+        // === ПОДОБРЕНА ЛОГИКА ЗА ОТВАРЯНЕ НА ПАНЕЛА ===
         counter.addEventListener('click', function(e) {
           e.stopPropagation();
-          if (window.hypothesis && window.hypothesis.openSidebar) {
-            window.hypothesis.openSidebar();
-          } else {
-            // Ако Hypothesis не е зареден, зареждаме го
-            if (!document.querySelector('script[src*="hypothes.is/embed.js"]')) {
-              const script = document.createElement('script');
-              script.src = 'https://hypothes.is/embed.js';
-              script.async = true;
-              document.head.appendChild(script);
+
+          function openHypothesisPanel() {
+            if (window.hypothesis && typeof window.hypothesis.openSidebar === 'function') {
+              window.hypothesis.openSidebar();
+              return true;
             }
-            // Опитваме да отворим след като се зареди
-            setTimeout(() => {
-              if (window.hypothesis && window.hypothesis.openSidebar) {
-                window.hypothesis.openSidebar();
+            return false;
+          }
+
+          // Първо опитваме директно
+          if (openHypothesisPanel()) {
+            return;
+          }
+
+          // Ако не е зареден, зареждаме скрипта
+          if (!document.querySelector('script[src*="hypothes.is/embed.js"]')) {
+            const script = document.createElement('script');
+            script.src = 'https://hypothes.is/embed.js';
+            script.async = true;
+            script.onload = function() {
+              // След зареждане, даваме време за инициализация и отваряме
+              setTimeout(openHypothesisPanel, 600);
+            };
+            script.onerror = function() {
+              console.warn('Неуспешно зареждане на Hypothesis скрипта.');
+            };
+            document.head.appendChild(script);
+          } else {
+            // Скриптът вече е зареден, но все още не е готов – опитваме след забавяне
+            let attempts = 0;
+            const maxAttempts = 5;
+            const interval = setInterval(() => {
+              attempts++;
+              if (openHypothesisPanel()) {
+                clearInterval(interval);
+              } else if (attempts >= maxAttempts) {
+                clearInterval(interval);
+                console.warn('Неуспешно отваряне на Hypothesis панела след няколко опита.');
               }
-            }, 1500);
+            }, 500);
           }
         });
 
-        // Вмъкваме брояча СЛЕД текстовия възел, без да променяме самия текст
+        // Вмъкваме брояча СЛЕД маркирания текст (без да презаписваме целия текст)
         const parent = textNode.parentNode;
         const range = document.createRange();
-        range.setStart(textNode, searchText.length + textNode.nodeValue.indexOf(searchText));
-        range.setEnd(textNode, searchText.length + textNode.nodeValue.indexOf(searchText));
+        const startIndex = textNode.nodeValue.indexOf(searchText);
+        if (startIndex === -1) continue;
+        range.setStart(textNode, startIndex + searchText.length);
+        range.setEnd(textNode, startIndex + searchText.length);
+        
+        // Обвиваме маркирания текст в <span>
         const span = document.createElement('span');
         span.className = 'hypothesis-highlighted-text';
         span.textContent = searchText;
-        range.deleteContents();
-        range.insertNode(span);
-        span.after(counter);
-
-        // Маркираме, че сме обработили този текст (за да не го дублираме)
-        textNode.nodeValue = textNode.nodeValue.replace(searchText, '');
+        
+        // Заменяме само маркирания текст с <span> и добавяме брояч след него
+        const fragment = document.createDocumentFragment();
+        const beforeText = document.createTextNode(textNode.nodeValue.substring(0, startIndex));
+        fragment.appendChild(beforeText);
+        fragment.appendChild(span);
+        fragment.appendChild(counter);
+        const afterText = document.createTextNode(textNode.nodeValue.substring(startIndex + searchText.length));
+        fragment.appendChild(afterText);
+        
+        parent.replaceChild(fragment, textNode);
         break;
       }
     }
   }
 }
-
   async function initHypothesisCounters() {
     const annotations = await fetchHypothesisAnnotations();
     if (annotations.length > 0) {
