@@ -657,3 +657,35 @@ footer {
     page-break-inside: avoid;
   }
 }
+
+/* ===== HYPHOTHESIS БРОЯЧИ ===== */
+.hypothesis-counter {
+  color: #0645ad;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-left: 2px;
+  cursor: pointer;
+  background-color: #eef4ff;
+  padding: 0 4px;
+  border-radius: 10px;
+  border: 1px solid #0645ad;
+  line-height: 1.4;
+  transition: background 0.2s, transform 0.2s;
+  display: inline-block;
+  user-select: none;
+  font-family: inherit;
+}
+.hypothesis-counter:hover {
+  background-color: #d4e4ff;
+  transform: scale(1.1);
+}
+.hypothesis-counter:active {
+  transform: scale(0.95);
+}
+
+/* Маркиран текст (жълт фон) */
+.hypothesis-highlighted-text {
+  background-color: #ffd;
+  border-radius: 2px;
+  padding: 0 2px;
+}
