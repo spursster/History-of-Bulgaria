@@ -1,29 +1,3 @@
-// ===== МОБИЛНА ТЪРСАЧКА – ПРЕВКЛЮЧВАНЕ =====
-document.addEventListener('DOMContentLoaded', function() {
-  const toggleBtn = document.querySelector('.search-toggle');
-  const wrapper = document.querySelector('.searchbox-wrapper');
-
-  if (toggleBtn && wrapper) {
-    toggleBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      wrapper.classList.toggle('open');
-      // Ако се отваря, фокусираме полето за търсене
-      if (wrapper.classList.contains('open')) {
-        const input = wrapper.querySelector('#search');
-        if (input) setTimeout(() => input.focus(), 100);
-      }
-    });
-
-    // Затваряне при клик извън търсачката (опционално)
-    document.addEventListener('click', function(e) {
-      if (wrapper.classList.contains('open') && 
-          !wrapper.contains(e.target) && 
-          e.target !== toggleBtn) {
-        wrapper.classList.remove('open');
-      }
-    });
-  }
-});
 document.addEventListener('DOMContentLoaded', function () {
   // ===== ЕЛЕМЕНТИ =====
   const form = document.querySelector('.searchbox');
@@ -53,21 +27,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ===== POLLINATIONS.AI – иконки за владетели =====
-  // Проверяваме дали pollinations.js вече е зареден (ако е включен чрез <script>)
-  // Ако не е, ще го заредим динамично при нужда.
   let pollinationsLoaded = false;
 
   function loadPollinationsScript() {
     return new Promise((resolve, reject) => {
-      // Ако вече е зареден, връщаме веднага
       if (typeof getRulerImageUrl !== 'undefined') {
         pollinationsLoaded = true;
         resolve();
         return;
       }
-      // Ако скриптът вече е добавен, но все още не е изпълнен
       if (document.querySelector('script[src="pollinations.js"]')) {
-        // Изчакваме да се зареди
         const checkLoaded = setInterval(() => {
           if (typeof getRulerImageUrl !== 'undefined') {
             clearInterval(checkLoaded);
@@ -75,14 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
             resolve();
           }
         }, 100);
-        // Таймаут за изчакване
         setTimeout(() => {
           clearInterval(checkLoaded);
           reject(new Error('Времето за зареждане на pollinations.js изтече'));
         }, 10000);
         return;
       }
-      // Добавяме скрипта
       const script = document.createElement('script');
       script.src = 'pollinations.js';
       script.onload = () => {
@@ -96,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Функция за генериране на URL за иконка (използваме, ако pollinations.js не е зареден)
   function getFallbackImageUrl(name, page) {
     const prompt = encodeURIComponent(
       `portrait of ${name}, ${page} ruler, medieval character, detailed face, royal clothing, oil painting style`
@@ -104,26 +70,21 @@ document.addEventListener('DOMContentLoaded', function () {
     return `https://image.pollinations.ai/prompt/${prompt}?width=128&height=128&nologo=true`;
   }
 
-  // Зареждане на иконка в контейнер
   async function loadRulerIcon(name, page, container) {
-    // Опитваме се да заредим pollinations.js
     try {
       await loadPollinationsScript();
     } catch (e) {
       console.warn('Pollinations не е зареден, използвам fallback URL');
     }
 
-    // Кеш ключ
     const cacheKey = `ruler_icon_${name}_${page}`;
     const cached = localStorage.getItem(cacheKey);
 
     if (cached) {
-      // Ако има кеширано изображение (data URL или URL)
       container.innerHTML = `<img src="${cached}" alt="${name}" class="ruler-icon" loading="lazy">`;
       return;
     }
 
-    // Генериране на URL – използваме функцията от pollinations.js, ако е налична
     let imageUrl;
     if (typeof getRulerImageUrl === 'function') {
       imageUrl = getRulerImageUrl(name, page);
@@ -131,12 +92,10 @@ document.addEventListener('DOMContentLoaded', function () {
       imageUrl = getFallbackImageUrl(name, page);
     }
 
-    // Предварително зареждане
     const img = new Image();
     img.crossOrigin = 'anonymous';
 
     img.onload = function () {
-      // Запазваме като data URL за офлайн достъп
       try {
         const canvas = document.createElement('canvas');
         canvas.width = img.width;
@@ -147,37 +106,32 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem(cacheKey, dataUrl);
         container.innerHTML = `<img src="${dataUrl}" alt="${name}" class="ruler-icon" loading="lazy">`;
       } catch (e) {
-        // Ако не може да се запази като data URL, запазваме оригиналния URL
         localStorage.setItem(cacheKey, imageUrl);
         container.innerHTML = `<img src="${imageUrl}" alt="${name}" class="ruler-icon" loading="lazy">`;
       }
     };
 
     img.onerror = function () {
-      // При грешка – показваме placeholder
       container.innerHTML = `<span class="ruler-icon-placeholder">${name.charAt(0)}</span>`;
-      // Запазваме placeholder в кеша, за да не опитваме отново
       localStorage.setItem(cacheKey, 'placeholder');
     };
 
     img.src = imageUrl;
   }
 
-  // Инициализиране на всички иконки на страницата
   async function initRulerIcons() {
     const containers = document.querySelectorAll('.ruler-icon-container');
     for (const container of containers) {
       const name = container.dataset.rulerName;
       const page = container.dataset.rulerPage || 'History';
       if (name) {
-        // Проверка дали вече не е заредено
         if (container.querySelector('img, .ruler-icon-placeholder')) continue;
         await loadRulerIcon(name, page, container);
       }
     }
   }
 
-  // ===== ФОРМАТИРАНЕ НА КАРТА ЗА СЛУЧАЕН ВЛАДЕТЕЛ (с иконка) =====
+  // ===== ФОРМАТИРАНЕ НА КАРТА ЗА СЛУЧАЕН ВЛАДЕТЕЛ =====
   function formatRulerCard(ruler) {
     return `
       <div class="ruler-icon-container" 
@@ -209,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const card = widget.querySelector('.random-ruler-card');
 
     button.addEventListener('click', async () => {
-      // Зареждаме данните, ако все още не са заредени
       let data = rulersLoaded ? rulersData : await loadRulersData();
       if (!data || data.length === 0) {
         card.innerHTML = '<p>За съжаление няма налични данни за владетели.</p>';
@@ -219,10 +172,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const randomIndex = Math.floor(Math.random() * data.length);
       const ruler = data[randomIndex];
 
-      // Показваме картата с контейнер за иконка
       card.innerHTML = formatRulerCard(ruler);
 
-      // Инициализираме иконката в новодобавеното съдържание
       const container = card.querySelector('.ruler-icon-container');
       if (container) {
         await loadRulerIcon(ruler.name, ruler.page, container);
@@ -306,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateResults(count, query);
   }
 
-  // ===== DEBOUNCE за input събитието =====
+  // ===== DEBOUNCE =====
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -392,8 +343,130 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('hashchange', updateCurrentNavByHash);
   }
 
+  // ===== МОБИЛНА ТЪРСАЧКА – ПРЕВКЛЮЧВАНЕ =====
+  function initMobileSearchToggle() {
+    const toggleBtn = document.querySelector('.search-toggle');
+    const wrapper = document.querySelector('.searchbox-wrapper');
+
+    if (toggleBtn && wrapper) {
+      toggleBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        wrapper.classList.toggle('open');
+        if (wrapper.classList.contains('open')) {
+          const inputField = wrapper.querySelector('#search');
+          if (inputField) setTimeout(() => inputField.focus(), 100);
+        }
+      });
+
+      document.addEventListener('click', function (e) {
+        if (
+          wrapper.classList.contains('open') &&
+          !wrapper.contains(e.target) &&
+          e.target !== toggleBtn
+        ) {
+          wrapper.classList.remove('open');
+        }
+      });
+    }
+  }
+
+  // ===== CHATANGO ЧАТ =====
+  function loadChatango() {
+    const sidebar = document.querySelector('.mw-sidebar');
+    if (!sidebar) return;
+    if (document.getElementById('chatango-container')) return;
+
+    const chatContainer = document.createElement('div');
+    chatContainer.id = 'chatango-container';
+    chatContainer.style.marginTop = '1.5rem';
+    chatContainer.style.borderTop = '1px solid var(--border)';
+    chatContainer.style.paddingTop = '1rem';
+
+    const chatTitle = document.createElement('p');
+    chatTitle.style.fontWeight = 'bold';
+    chatTitle.style.marginBottom = '0.5rem';
+    chatTitle.textContent = '💬 Исторически чат';
+    chatContainer.appendChild(chatTitle);
+
+    const script = document.createElement('script');
+    script.id = 'cid0020000443405969716';
+    script.setAttribute('data-cfasync', 'false');
+    script.async = true;
+    script.src = '//st.chatango.com/js/gz/emb.js';
+    script.style.width = '250px';
+    script.style.height = '350px';
+    script.textContent = JSON.stringify({
+      handle: 'bulgariahistory',
+      arch: 'js',
+      styles: {
+        a: '000000',
+        b: 100,
+        c: 'FFFFFF',
+        d: 'FFFFFF',
+        k: '000000',
+        l: '000000',
+        m: '000000',
+        n: 'FFFFFF',
+        p: '10',
+        q: '000000',
+        r: 100,
+        fwtickm: 1,
+      },
+    });
+
+    chatContainer.appendChild(script);
+    sidebar.appendChild(chatContainer);
+  }
+
+  // ===== HYPHOTHESIS – ИНИЦИАЛИЗАЦИЯ И БУТОН =====
+  function initHypothesis() {
+    // Проверяваме дали Hypothesis вече е зареден
+    if (document.querySelector('script[src*="hypothes.is/embed.js"]')) {
+      return;
+    }
+
+    // Добавяме конфигурация (опционално)
+    const configScript = document.createElement('script');
+    configScript.type = 'application/json';
+    configScript.className = 'js-hypothesis-config';
+    configScript.textContent = JSON.stringify({
+      // Можете да добавите настройки тук, напр.:
+      // openSidebar: false, // дали панелът да е отворен по подразбиране
+      // theme: 'clean', // или 'classic'
+    });
+    document.head.appendChild(configScript);
+
+    // Зареждаме основния скрипт на Hypothesis
+    const script = document.createElement('script');
+    script.src = 'https://hypothes.is/embed.js';
+    script.async = true;
+    document.head.appendChild(script);
+
+    // Добавяме бутон за бързо отваряне на Hypothesis панела (опционално)
+    // Този бутон ще се показва само ако съществува елемент с id="hypothesis-toggle"
+    const toggleBtn = document.getElementById('hypothesis-toggle');
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        // Използваме API на Hypothesis, ако е налично
+        if (window.hypothesis && window.hypothesis.openSidebar) {
+          window.hypothesis.openSidebar();
+        } else {
+          // Ако все още не е зареден, опитваме след малко
+          const checkHypothesis = setInterval(() => {
+            if (window.hypothesis && window.hypothesis.openSidebar) {
+              window.hypothesis.openSidebar();
+              clearInterval(checkHypothesis);
+            }
+          }, 500);
+          // Спираме опита след 10 секунди
+          setTimeout(() => clearInterval(checkHypothesis), 10000);
+        }
+      });
+    }
+  }
+
   // ===== ИНИЦИАЛИЗАЦИЯ =====
-  // 1. Зареждаме данните за владетелите на заден план
+  // 1. Зареждаме данните за владетелите
   loadRulersData();
 
   // 2. Създаваме джаджата за случаен владетел
@@ -402,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3. Инициализираме scroll spy
   initScrollSpy();
 
-  // 4. Ако съществуват форма и поле за търсене, добавяме евенти
+  // 4. Търсене
   if (form && input && results && article) {
     form.addEventListener('submit', performSearch);
 
@@ -417,69 +490,19 @@ document.addEventListener('DOMContentLoaded', function () {
     updateResults(0, '');
   }
 
-  // 5. Инициализираме иконките на всички владетели, които вече са на страницата
-  // Изчакваме малко, за да се зареди pollinations.js, ако е включен статично
+  // 5. Иконки на владетели (след малко зареждане)
   setTimeout(() => {
     initRulerIcons();
   }, 500);
+
+  // 6. Мобилна търсачка
+  initMobileSearchToggle();
+
+  // 7. Chatango чат
+  loadChatango();
+
+  // 8. Hypothesis – зареждане и бутон (ако има)
+  initHypothesis();
 });
 
-// ===== CHATANGO ЧАТ В СТРАНИЧНАТА ЛЕНТА =====
-function loadChatango() {
-    const sidebar = document.querySelector('.mw-sidebar');
-    if (!sidebar) return;
-
-    // Проверка дали чатът вече е добавен
-    if (document.getElementById('chatango-container')) return;
-
-    // Създаваме контейнер за чата
-    const chatContainer = document.createElement('div');
-    chatContainer.id = 'chatango-container';
-    chatContainer.style.marginTop = '1.5rem';
-    chatContainer.style.borderTop = '1px solid var(--border)';
-    chatContainer.style.paddingTop = '1rem';
-
-    // Заглавие над чата
-    const chatTitle = document.createElement('p');
-    chatTitle.style.fontWeight = 'bold';
-    chatTitle.style.marginBottom = '0.5rem';
-    chatTitle.textContent = '💬 Исторически чат';
-    chatContainer.appendChild(chatTitle);
-
-    // Създаваме скрипт елемент за Chatango
-    const script = document.createElement('script');
-    script.id = 'cid0020000443405969716';
-    script.setAttribute('data-cfasync', 'false');
-    script.async = true;
-    script.src = '//st.chatango.com/js/gz/emb.js';
-    script.style.width = '250px';
-    script.style.height = '350px';
-    // Конфигурацията на чата – подава се като текст
-    script.textContent = JSON.stringify({
-        handle: 'bulgariahistory',
-        arch: 'js',
-        styles: {
-            a: '000000',
-            b: 100,
-            c: 'FFFFFF',
-            d: 'FFFFFF',
-            k: '000000',
-            l: '000000',
-            m: '000000',
-            n: 'FFFFFF',
-            p: '10',
-            q: '000000',
-            r: 100,
-            fwtickm: 1
-        }
-    });
-
-    chatContainer.appendChild(script);
-    sidebar.appendChild(chatContainer);
-}
-
-// Извикваме функцията след като DOM е готов
-document.addEventListener('DOMContentLoaded', function() {
-    // ... останалият ви код ...
-    loadChatango();
-});
+// ===== (КРАЙ НА ФАЙЛА) =====
