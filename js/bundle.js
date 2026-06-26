@@ -3,6 +3,25 @@
 // ======================================================
 
 (function() {
+  // 0. Зареждане на Hypothesis (анотации) – винаги, веднага
+  function loadHypothesis() {
+    return new Promise((resolve) => {
+      if (document.querySelector('script[src*="hypothes.is/embed.js"]')) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://hypothes.is/embed.js';
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = () => {
+        console.warn('Hypothesis не се зареди, но сайтът ще продължи.');
+        resolve();
+      };
+      document.head.appendChild(script);
+    });
+  }
+
   // 1. Зареждане на Pollinations (иконки)
   function loadPollinations() {
     return new Promise((resolve) => {
@@ -81,6 +100,9 @@
 
   // 4. Стартиране на сайта
   async function init() {
+    // Зареждаме Hypothesis веднага (преди всичко останало)
+    await loadHypothesis();
+
     // Зареждаме компонентите (header, sidebar, footer) – те са независими от скриптовете
     await loadComponents();
 
