@@ -30,7 +30,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = '/pollinations.js';  // абсолютен път
+      script.src = '/pollinations.js';
       script.async = true;
       script.onload = resolve;
       script.onerror = () => {
@@ -49,7 +49,7 @@
         return;
       }
       const script = document.createElement('script');
-      script.src = '/script.js';  // абсолютен път
+      script.src = '/script.js';
       script.defer = true;
       script.onload = resolve;
       script.onerror = () => {
@@ -70,7 +70,7 @@
 
     if (headerContainer) {
       promises.push(
-        fetch('/includes/header.html')  // абсолютен път
+        fetch('/includes/header.html')
           .then(res => res.text())
           .then(html => { headerContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на header:', err))
@@ -79,7 +79,7 @@
 
     if (sidebarContainer) {
       promises.push(
-        fetch('/includes/sidebar.html')  // абсолютен път
+        fetch('/includes/sidebar.html')
           .then(res => res.text())
           .then(html => { sidebarContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на sidebar:', err))
@@ -88,7 +88,7 @@
 
     if (footerContainer) {
       promises.push(
-        fetch('/includes/footer.html')  // абсолютен път
+        fetch('/includes/footer.html')
           .then(res => res.text())
           .then(html => { footerContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на footer:', err))
