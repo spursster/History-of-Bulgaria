@@ -2,33 +2,158 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
-  <title>Летописи</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сборник от старобългарски летописи – оригинални текстове без съвременна редакция.">
+  <title>Летописи – Историята на България</title>
   <link rel="stylesheet" href="../styles.css">
+  <!-- Hypothesis (за коментари върху текст) -->
+  <script src="https://hypothes.is/embed.js" async></script>
+  <!-- Pollinations (иконки) -->
+  <script src="../pollinations.js"></script>
+  <style>
+    /* Временен стил, докато се заредят компонентите – показваме loading */
+    #header-container, #sidebar-container, #footer-container {
+      min-height: 50px;
+    }
+    .loading-placeholder {
+      color: var(--muted);
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
 </head>
 <body>
   <div id="page">
-    <header id="top">...</header>
+
+    <a class="skip-link" href="#content">Прескочи към съдържанието</a>
+
+    <!-- ===== ХЕДЪР (зарежда се от includes/header.html) ===== -->
+    <div id="header-container">
+      <div class="loading-placeholder">⏳ Зареждане на хедъра...</div>
+    </div>
+
+    <!-- ===== ОСНОВЕН ГРИД ===== -->
     <div class="mw-body">
-      <aside class="mw-sidebar">...</aside>
+
+      <!-- ===== СТРАНИЧНА НАВИГАЦИЯ (зарежда се от includes/sidebar.html) ===== -->
+      <div id="sidebar-container">
+        <div class="loading-placeholder">⏳ Зареждане на навигацията...</div>
+      </div>
+
+      <!-- ===== ОСНОВНО СЪДЪРЖАНИЕ ===== -->
       <main class="mw-content" id="content">
-        <h1>📜 Български летописи</h1>
-        <ul id="letopisi-list"></ul>
+        <article>
+
+          <header class="mw-page-header">
+            <p class="hatnote">Сборник от старобългарски летописи – оригинални текстове, без съвременна редакция.</p>
+            <h1>📜 Български летописи</h1>
+          </header>
+
+          <section class="intro">
+            <p>
+              Тук са събрани оригиналните старобългарски летописни текстове,
+              достигнали до нас в различни ръкописи. Те са публикувани в максимално
+              близък до оригинала вид, без съвременна редакция, за да се запази
+              автентичността на езика, правописа и съдържанието.
+            </p>
+          </section>
+
+          <!-- ===== СПИСЪК С ЛЕТОПИСИ ===== -->
+          <section style="margin-top: 2rem;">
+            <h2>Налични летописи</h2>
+            <ul style="list-style: none; padding: 0;">
+              <li style="margin-bottom: 1.5rem; padding: 1rem; background: var(--accent); border-radius: var(--radius-sm); border-left: 4px solid #b3884a;">
+                <strong style="font-size: 1.2rem;">
+                  <a href="uvarov.html" style="color: var(--link); text-decoration: none;">
+                    📜 Именник на българските владетели – Уваров препис (XV в.)
+                  </a>
+                </strong>
+                <p style="margin: 0.5rem 0 0; color: var(--muted);">
+                  Най-старият достигнал до нас препис на Именника. Съдържа списък на
+                  владетелите от Авитохол до Умор с години на управление, род и
+                  прабългарски календарни названия.
+                </p>
+              </li>
+              <!-- Тук могат да се добавят още летописи в бъдеще -->
+            </ul>
+          </section>
+
+          <section class="references" style="margin-top: 2.5rem;">
+            <h2>Източници</h2>
+            <ol>
+              <li>Уваров сборник (РГБ, Москва), края на XV в.</li>
+              <li>Московски препис (XVI в.) и Погодинов препис (XVI в.) – за сравнение.</li>
+            </ol>
+          </section>
+
+        </article>
       </main>
     </div>
-    <footer>...</footer>
-  </div>
+
+    <!-- ===== ФУТЪР (зарежда се от includes/footer.html) ===== -->
+    <div id="footer-container">
+      <div class="loading-placeholder">⏳ Зареждане на футъра...</div>
+    </div>
+
+  </div> <!-- /#page -->
+
+  <!-- ===== СКРИПТ ЗА ЗАРЕЖДАНЕ НА КОМПОНЕНТИТЕ ===== -->
   <script>
-    // Ръчен списък с наличните летописи
-    const files = [
-      { name: 'Уваров препис (XV в.)', url: 'uvarov.html' }
-      // Тук можеш да добавяш нови файлове
-    ];
-    const list = document.getElementById('letopisi-list');
-    files.forEach(f => {
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="${f.url}">${f.name}</a>`;
-      list.appendChild(li);
-    });
+    // Функция за зареждане на HTML компонент
+    async function loadComponent(elementId, filePath) {
+      try {
+        const response = await fetch(filePath);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const html = await response.text();
+        document.getElementById(elementId).innerHTML = html;
+        return true;
+      } catch (error) {
+        console.error(`Грешка при зареждане на ${filePath}:`, error);
+        document.getElementById(elementId).innerHTML = `<p style="color:red; padding:1rem;">❌ Грешка при зареждане на компонента.</p>`;
+        return false;
+      }
+    }
+
+    // Зареждаме всички компоненти паралелно
+    async function loadAllComponents() {
+      await Promise.all([
+        loadComponent('header-container', '../includes/header.html'),
+        loadComponent('sidebar-container', '../includes/sidebar.html'),
+        loadComponent('footer-container', '../includes/footer.html')
+      ]);
+
+      // След като sidebar-ът се зареди, маркираме активния бутон
+      const sidebarLinks = document.querySelectorAll('#sidebar-container .nav-button');
+      sidebarLinks.forEach(link => {
+        // Ако href сочи към letopisi/index.html или завършва на /letopisi/
+        if (link.getAttribute('href') === 'index.html' || link.getAttribute('href') === '') {
+          link.setAttribute('aria-current', 'page');
+        }
+      });
+
+      // Инициализираме всички скриптове, които разчитат на DOM елементи (търсене, иконки, чат)
+      // Тъй като script.js вече е зареден, но компонентите се зареждат след това,
+      // трябва да извикаме функциите ръчно, ако не работят автоматично.
+      if (typeof initRulerIcons === 'function') {
+        setTimeout(initRulerIcons, 300);
+      }
+      if (typeof initMobileSearchToggle === 'function') {
+        initMobileSearchToggle();
+      }
+      if (typeof loadChatango === 'function') {
+        loadChatango();
+      }
+    }
+
+    // Стартираме зареждането, след като DOM е готов
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadAllComponents);
+    } else {
+      loadAllComponents();
+    }
   </script>
+
+  <!-- Основният script.js – зареждаме го след компонентите, за да не блокира -->
+  <script src="../script.js" defer></script>
 </body>
 </html>
