@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Летописи</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div id="page">
+    <header id="top">...</header>
+    <div class="mw-body">
+      <aside class="mw-sidebar">...</aside>
+      <main class="mw-content" id="content">
+        <h1>📜 Български летописи</h1>
+        <ul id="letopisi-list"></ul>
+      </main>
+    </div>
+    <footer>...</footer>
+  </div>
+  <script>
+    // Ръчен списък с наличните летописи
+    const files = [
+      { name: 'Уваров препис (XV в.)', url: 'uvarov.html' }
+      // Тук можеш да добавяш нови файлове
+    ];
+    const list = document.getElementById('letopisi-list');
+    files.forEach(f => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${f.url}">${f.name}</a>`;
+      list.appendChild(li);
+    });
+  </script>
+</body>
+</html>
