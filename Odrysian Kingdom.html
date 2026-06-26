@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
@@ -6,50 +6,24 @@
   <meta name="description" content="Пълен списък на владетелите на Одриското царство – от Терес I до Реметалк III, включително сапейските царе." />
   <title>Одриско Царство – пълен списък на владетелите</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="https://hypothes.is/embed.js" async></script>
+  <!-- Централизиран скрипт – зарежда всичко -->
+  <script src="js/bundle.js" defer></script>
 </head>
 <body>
   <div id="page">
 
     <a class="skip-link" href="#content">Прескочи към съдържанието</a>
 
-    <header id="top">
-      <div class="site-title">
-        <a href="index.html">Историята на България</a>
-        <p class="site-tagline">Енциклопедична колекция от статии за българската история и свързаните държави.</p>
-        <button type="button" class="search-toggle" aria-label="Търсене" title="Търсене">🔍</button>
-        <button type="button" id="hypothesis-toggle" aria-label="Коментари върху текста" title="Добави коментар върху текст">💬</button>
-      </div>
-      <div class="searchbox-wrapper">
-        <form class="searchbox" action="#" method="get" role="search">
-          <label for="search" class="sr-only">Търсене в текста на страницата</label>
-          <input id="search" type="search" name="q" placeholder="Търсене...">
-          <button type="submit">Търси</button>
-        </form>
-        <div id="search-results" class="search-results" role="status" aria-live="polite"></div>
-      </div>
-    </header>
+    <!-- ===== ХЕДЪР – зарежда се от includes/header.html ===== -->
+    <div id="header-container"></div>
 
     <div class="mw-body">
+      <!-- ===== СТРАНИЧНА ЛЕНТА – зарежда се от includes/sidebar.html ===== -->
+      <div id="sidebar-container"></div>
 
-      <aside class="mw-sidebar" aria-label="Навигация">
-        <h2>Навигация</h2>
-        <ul>
-          <li><a class="nav-button" href="index.html">Начало</a></li>
-          <li><a class="nav-button" href="index.html#first-bulgarian-empire">Първа българска държава</a></li>
-          <li><a class="nav-button" href="Old Great Bulgaria.html">Стара Велика България</a></li>
-          <li><a class="nav-button" href="Second Bulgarian Empire.html">Втора българска държава</a></li>
-          <li><a class="nav-button" href="volga-bulgaria.html">Волжка България</a></li>
-          <li><a class="nav-button" href="Wallachia.html">Влашко</a></li>
-          <li><a class="nav-button" aria-current="page" href="Odrysian Kingdom.html">Одриско Царство</a></li>
-          <li><a class="nav-button" href="macedonian-empire.html">Македонско Царство</a></li>
-          <li><a class="nav-button" href="letopisi/index.html">📜 Летописи</a></li>
-        </ul>
-      </aside>
-
+      <!-- ===== ОСНОВНО СЪДЪРЖАНИЕ (уникално за тази страница) ===== -->
       <main class="mw-content" id="content">
         <article>
-
           <header class="mw-page-header">
             <p class="hatnote">Тази страница представя пълен хронологичен списък на владетелите на Одриското царство, разделен по исторически периоди.</p>
             <h1>Одриско Царство – пълен списък на владетелите</h1>
@@ -219,12 +193,10 @@
       </main>
     </div>
 
-    <footer>
-      <p>Страницата представя пълен хронологичен списък на владетелите на Одриското царство – от основаването до римското завоевание.</p>
-    </footer>
+    <!-- ===== ФУТЪР – зарежда се от includes/footer.html ===== -->
+    <div id="footer-container"></div>
 
   </div>
-
-<script src="js/bundle.js" defer></script>
+  <!-- Централизираният скрипт се зарежда от <head> (js/bundle.js) -->
 </body>
 </html>
