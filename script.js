@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', function () {
+// ======================================================
+// ОСНОВЕН СКРИПТ ЗА САЙТА – ИНИЦИАЛИЗАЦИЯ
+// ======================================================
+
+function initHistorySite() {
   // ===== ЕЛЕМЕНТИ =====
   const form = document.querySelector('.searchbox');
   const input = document.getElementById('search');
@@ -458,145 +462,133 @@ document.addEventListener('DOMContentLoaded', function () {
       return [];
     }
   }
-function addAnnotationCounters(annotations) {
-  if (!annotations || annotations.length === 0) return;
 
-  const annotationsByText = {};
+  function addAnnotationCounters(annotations) {
+    if (!annotations || annotations.length === 0) return;
 
-  annotations.forEach(ann => {
-    if (ann.target && ann.target.length > 0) {
-      const target = ann.target[0];
-      if (target.selector) {
-        const textSelector = target.selector.find(s => s.type === 'TextQuoteSelector');
-        if (textSelector && textSelector.exact) {
-          const text = textSelector.exact.trim();
-          if (!annotationsByText[text]) {
-            annotationsByText[text] = [];
+    const annotationsByText = {};
+
+    annotations.forEach(ann => {
+      if (ann.target && ann.target.length > 0) {
+        const target = ann.target[0];
+        if (target.selector) {
+          const textSelector = target.selector.find(s => s.type === 'TextQuoteSelector');
+          if (textSelector && textSelector.exact) {
+            const text = textSelector.exact.trim();
+            if (!annotationsByText[text]) {
+              annotationsByText[text] = [];
+            }
+            annotationsByText[text].push(ann);
           }
-          annotationsByText[text].push(ann);
         }
       }
-    }
-  });
+    });
 
-  if (Object.keys(annotationsByText).length === 0) return;
+    if (Object.keys(annotationsByText).length === 0) return;
 
-  const articleElem = document.querySelector('article');
-  if (!articleElem) return;
+    const articleElem = document.querySelector('article');
+    if (!articleElem) return;
 
-  // Създаваме списък с всички текстови възли, които не са в Hypothesis
-  const walker = document.createTreeWalker(
-    articleElem,
-    NodeFilter.SHOW_TEXT,
-    {
-      acceptNode: function(node) {
-        if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight, .annotator-hl')) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    },
-    false
-  );
-
-  const textNodes = [];
-  let node;
-  while ((node = walker.nextNode())) {
-    textNodes.push(node);
-  }
-
-  // За всяка дума с анотации
-  for (const [searchText, anns] of Object.entries(annotationsByText)) {
-    const count = anns.length;
-
-    // Създаваме брояч веднъж, за да го използваме многократно (клонираме го)
-    const baseCounter = document.createElement('sup');
-    baseCounter.className = 'hypothesis-counter';
-    baseCounter.textContent = `(${count})`;
-    baseCounter.title = `${count} коментар(а) – кликнете за да видите`;
-
-    // Функция за отваряне на панела
-    function openPanel() {
-      function openHypothesisPanel() {
-        if (window.hypothesis && typeof window.hypothesis.openSidebar === 'function') {
-          window.hypothesis.openSidebar();
-          return true;
-        }
-        return false;
-      }
-
-      if (openHypothesisPanel()) return;
-
-      if (!document.querySelector('script[src*="hypothes.is/embed.js"]')) {
-        const script = document.createElement('script');
-        script.src = 'https://hypothes.is/embed.js';
-        script.async = true;
-        script.onload = function() {
-          setTimeout(openHypothesisPanel, 600);
-        };
-        document.head.appendChild(script);
-      } else {
-        let attempts = 0;
-        const maxAttempts = 5;
-        const interval = setInterval(() => {
-          attempts++;
-          if (openHypothesisPanel()) {
-            clearInterval(interval);
-          } else if (attempts >= maxAttempts) {
-            clearInterval(interval);
+    const walker = document.createTreeWalker(
+      articleElem,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: function(node) {
+          if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight, .annotator-hl')) {
+            return NodeFilter.FILTER_REJECT;
           }
-        }, 500);
-      }
+          if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      },
+      false
+    );
+
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
     }
 
-    // За всеки текстов възел
-    for (const textNode of textNodes) {
-      const nodeText = textNode.nodeValue;
-      // Ако възелът съдържа търсения текст
-      if (nodeText.includes(searchText)) {
-        // Създаваме фрагмент, в който ще съберем обработения текст
-        const fragment = document.createDocumentFragment();
-        let remainingText = nodeText;
-        let lastIndex = 0;
-        let matchIndex;
+    for (const [searchText, anns] of Object.entries(annotationsByText)) {
+      const count = anns.length;
 
-        // Намираме всички срещания на searchText в nodeText
-        while ((matchIndex = remainingText.indexOf(searchText, lastIndex)) !== -1) {
-          // Добавяме текста преди срещането
-          const beforeText = remainingText.substring(lastIndex, matchIndex);
-          fragment.appendChild(document.createTextNode(beforeText));
+      const baseCounter = document.createElement('sup');
+      baseCounter.className = 'hypothesis-counter';
+      baseCounter.textContent = `(${count})`;
+      baseCounter.title = `${count} коментар(а) – кликнете за да видите`;
 
-          // Обвиваме маркирания текст в span
-          const span = document.createElement('span');
-          span.className = 'hypothesis-highlighted-text';
-          span.textContent = searchText;
-          fragment.appendChild(span);
-
-          // Добавяме брояч (клонираме baseCounter, за да има свой собствен event listener)
-          const counterClone = baseCounter.cloneNode(true);
-          counterClone.addEventListener('click', function(e) {
-            e.stopPropagation();
-            openPanel();
-          });
-          fragment.appendChild(counterClone);
-
-          // Продължаваме от следващия символ след срещането
-          lastIndex = matchIndex + searchText.length;
+      function openPanel() {
+        function openHypothesisPanel() {
+          if (window.hypothesis && typeof window.hypothesis.openSidebar === 'function') {
+            window.hypothesis.openSidebar();
+            return true;
+          }
+          return false;
         }
 
-        // Добавяме останалия текст след последното срещане
-        const afterText = remainingText.substring(lastIndex);
-        fragment.appendChild(document.createTextNode(afterText));
+        if (openHypothesisPanel()) return;
 
-        // Заменяме оригиналния текстов възел с фрагмента
-        textNode.parentNode.replaceChild(fragment, textNode);
+        if (!document.querySelector('script[src*="hypothes.is/embed.js"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://hypothes.is/embed.js';
+          script.async = true;
+          script.onload = function() {
+            setTimeout(openHypothesisPanel, 600);
+          };
+          document.head.appendChild(script);
+        } else {
+          let attempts = 0;
+          const maxAttempts = 5;
+          const interval = setInterval(() => {
+            attempts++;
+            if (openHypothesisPanel()) {
+              clearInterval(interval);
+            } else if (attempts >= maxAttempts) {
+              clearInterval(interval);
+            }
+          }, 500);
+        }
+      }
+
+      for (const textNode of textNodes) {
+        const nodeText = textNode.nodeValue;
+        if (nodeText.includes(searchText)) {
+          const fragment = document.createDocumentFragment();
+          let remainingText = nodeText;
+          let lastIndex = 0;
+          let matchIndex;
+
+          while ((matchIndex = remainingText.indexOf(searchText, lastIndex)) !== -1) {
+            const beforeText = remainingText.substring(lastIndex, matchIndex);
+            fragment.appendChild(document.createTextNode(beforeText));
+
+            const span = document.createElement('span');
+            span.className = 'hypothesis-highlighted-text';
+            span.textContent = searchText;
+            fragment.appendChild(span);
+
+            const counterClone = baseCounter.cloneNode(true);
+            counterClone.addEventListener('click', function(e) {
+              e.stopPropagation();
+              openPanel();
+            });
+            fragment.appendChild(counterClone);
+
+            lastIndex = matchIndex + searchText.length;
+          }
+
+          const afterText = remainingText.substring(lastIndex);
+          fragment.appendChild(document.createTextNode(afterText));
+
+          textNode.parentNode.replaceChild(fragment, textNode);
+        }
       }
     }
   }
-}
+
   async function initHypothesisCounters() {
     const annotations = await fetchHypothesisAnnotations();
     if (annotations.length > 0) {
@@ -653,7 +645,6 @@ function addAnnotationCounters(annotations) {
       if (window.hypothesis && window.hypothesis.openSidebar) {
         window.hypothesis.openSidebar();
       } else {
-        // Ако не е зареден, зареждаме го и отваряме след това
         const script = document.createElement('script');
         script.src = 'https://hypothes.is/embed.js';
         script.async = true;
@@ -668,4 +659,7 @@ function addAnnotationCounters(annotations) {
       }
     });
   }
-});
+}
+
+// Изнасяме функцията за инициализация глобално, за да може да бъде извикана от bundle.js
+window.initHistorySite = initHistorySite;
