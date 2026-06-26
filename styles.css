@@ -137,7 +137,11 @@ a:hover {
   font-size: 0.95rem;
 }
 
-/* ----- ТЪРСАЧКА ----- */
+/* ----- ТЪРСАЧКА (десктоп) ----- */
+.searchbox-wrapper {
+  display: block;
+}
+
 .searchbox {
   margin-top: 1rem;
   display: flex;
@@ -171,6 +175,21 @@ a:hover {
 .searchbox button:focus-visible {
   outline: 3px solid rgba(6, 69, 173, 0.65);
   outline-offset: 2px;
+}
+
+/* ----- БУТОН ЗА РАЗКРИВАНЕ НА ТЪРСАЧКАТА (скрит на десктоп) ----- */
+.search-toggle {
+  display: none; /* скрит на десктоп */
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.search-toggle:hover {
+  background: var(--accent);
 }
 
 /* ----- РЕЗУЛТАТИ ОТ ТЪРСЕНЕТО ----- */
@@ -220,7 +239,7 @@ a:hover {
   box-shadow: var(--shadow-sm);
   color: var(--text);
   animation: fadeInUp 0.4s ease forwards;
-  overflow: hidden; /* за да не излиза съдържанието */
+  overflow: hidden;
 }
 
 @keyframes fadeInUp {
@@ -257,14 +276,14 @@ a:hover {
 /* ----- ОСНОВНО ТЕЛО (grid) ----- */
 .mw-body {
   display: grid;
-  grid-template-columns: 290px 1fr;  /* Увеличено от 260px на 290px */
+  grid-template-columns: 290px 1fr;
   gap: 1.5rem;
 }
 
 /* ----- СТРАНИЧНА НАВИГАЦИЯ ----- */
 .mw-sidebar {
   background: var(--paper);
-  padding: 1rem 0.75rem;  /* леко намален хоризонтален padding за повече място */
+  padding: 1rem 0.75rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   position: sticky;
@@ -286,7 +305,7 @@ a:hover {
   margin-bottom: 0.5rem;
 }
 
-/* ----- НАВИГАЦИОННИ БУТОНИ (общи + специфични) ----- */
+/* ----- НАВИГАЦИОННИ БУТОНИ ----- */
 .mw-sidebar li a {
   display: block;
   padding: 0.9rem 1rem;
@@ -314,8 +333,6 @@ a:hover {
   outline: 3px solid rgba(6, 69, 173, 0.65);
   outline-offset: 3px;
 }
-
-/* Активна страница */
 .mw-sidebar li a[aria-current="page"] {
   background: linear-gradient(135deg, #0645ad, #072a66) !important;
   color: #fff;
@@ -324,7 +341,7 @@ a:hover {
   transform: translateY(-2px);
 }
 
-/* ----- СПЕЦИФИЧНИ ФОНОВЕ ЗА БУТОНИТЕ (shorthand) ----- */
+/* ----- СПЕЦИФИЧНИ ФОНОВЕ ЗА БУТОНИТЕ ----- */
 .mw-sidebar li a[href="#introduction"] {
   background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
 }
@@ -368,7 +385,6 @@ a:hover {
   width: 100%;
   max-width: 100%;
 }
-
 #chatango-container iframe,
 #chatango-container object {
   width: 100% !important;
@@ -394,7 +410,7 @@ a:hover {
   font-size: 2.25rem;
 }
 
-/* ----- ХАТНОТ (предупреждение/бележка) ----- */
+/* ----- ХАТНОТ ----- */
 .hatnote {
   display: inline-block;
   margin-bottom: 1rem;
@@ -502,7 +518,7 @@ a:hover {
   font-size: 0.95rem;
 }
 
-/* ----- ИЗТОЧНИЦИ (REFERENCES) ----- */
+/* ----- ИЗТОЧНИЦИ ----- */
 .references {
   margin-top: 2rem;
 }
@@ -520,36 +536,81 @@ footer {
 }
 
 /* ============================================================
-   RESPONSIVE (до 900px)
+   RESPONSIVE (до 900px) – МОБИЛНИ ОПТИМИЗАЦИИ
    ============================================================ */
 @media (max-width: 900px) {
   .mw-body {
-    grid-template-columns: 1fr;  /* на мобилни – единствена колона */
+    grid-template-columns: 1fr;
   }
   .mw-sidebar {
     position: static;
     max-height: none;
-    padding: 1rem;  /* възстановяваме нормалния padding */
+    padding: 1rem;
   }
   .mw-sidebar li a {
     min-height: auto;
     padding: 0.85rem 0.95rem;
   }
+
+  /* ----- ЗАГЛАВИЕ И ТАГЛИН ----- */
   .site-title {
     gap: 0.5rem;
   }
   .site-title a {
-    font-size: 1.8rem;
+    font-size: 1.5rem; /* по-малко */
   }
+  .site-tagline {
+    font-size: 0.75rem;
+    margin-top: 0.2rem;
+  }
+
+  /* ----- ТЪРСАЧКА – скрита, показва се само бутон с лупа ----- */
+  .search-toggle {
+    display: inline-block; /* показваме на мобилни */
+    margin-left: auto;     /* избутваме вдясно */
+    align-self: center;
+  }
+  .searchbox-wrapper {
+    display: none;        /* скрита по подразбиране */
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  .searchbox-wrapper.open {
+    display: block;       /* показва се при добавяне на клас .open */
+  }
+
   .searchbox {
     flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0;
   }
+  .searchbox input[type="search"] {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    min-height: 2.2rem;
+  }
+  .searchbox button {
+    width: 100%;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  /* ----- РЕЗУЛТАТИ ОТ ТЪРСЕНЕТО (по-компактни) ----- */
+  .search-results {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+  }
+
+  /* ----- ИНФОБОКС ----- */
   .infobox {
     float: none;
     width: 100%;
     margin: 0 0 1rem;
   }
-  /* На мобилни – чатът може да е малко по-нисък */
+
+  /* ----- ЧАТ – по-нисък на мобилни ----- */
   #chatango-container iframe,
   #chatango-container object {
     height: 280px !important;
@@ -557,7 +618,7 @@ footer {
 }
 
 /* ============================================================
-   PRINT СТИЛОВЕ (при отпечатване)
+   PRINT СТИЛОВЕ
    ============================================================ */
 @media print {
   #top,
