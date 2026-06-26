@@ -1,3 +1,29 @@
+// ===== МОБИЛНА ТЪРСАЧКА – ПРЕВКЛЮЧВАНЕ =====
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleBtn = document.querySelector('.search-toggle');
+  const wrapper = document.querySelector('.searchbox-wrapper');
+
+  if (toggleBtn && wrapper) {
+    toggleBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      wrapper.classList.toggle('open');
+      // Ако се отваря, фокусираме полето за търсене
+      if (wrapper.classList.contains('open')) {
+        const input = wrapper.querySelector('#search');
+        if (input) setTimeout(() => input.focus(), 100);
+      }
+    });
+
+    // Затваряне при клик извън търсачката (опционално)
+    document.addEventListener('click', function(e) {
+      if (wrapper.classList.contains('open') && 
+          !wrapper.contains(e.target) && 
+          e.target !== toggleBtn) {
+        wrapper.classList.remove('open');
+      }
+    });
+  }
+});
 document.addEventListener('DOMContentLoaded', function () {
   // ===== ЕЛЕМЕНТИ =====
   const form = document.querySelector('.searchbox');
