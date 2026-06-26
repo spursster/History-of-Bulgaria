@@ -691,3 +691,30 @@ footer {
   border-radius: 2px;
   padding: 0 2px;
 }
+/* === ЗАДЪЛЖИТЕЛНО ТЪМЕН ФОН ЗА БУТОН "ПЪРВА БЪЛГАРСКА ДЪРЖАВА" === */
+.mw-sidebar li a[href="#first-bulgarian-empire"],
+.mw-sidebar li a[href="index.html#first-bulgarian-empire"] {
+  background: linear-gradient(135deg, #4a2c1a, #1f1108) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  border: none !important;
+}
+
+/* Ако искате да запазите картинката, използвайте това: */
+/*
+.mw-sidebar li a[href="#first-bulgarian-empire"],
+.mw-sidebar li a[href="index.html#first-bulgarian-empire"] {
+  background: linear-gradient(135deg, rgba(30, 20, 10, 0.9), rgba(60, 40, 20, 0.85)), url('images/first-bulgaria.svg') no-repeat center right / cover !important;
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+}
+*/
+
+/* За да не става бял дори при активна страница (aria-current) */
+.mw-sidebar li a[href="#first-bulgarian-empire"][aria-current="page"],
+.mw-sidebar li a[href="index.html#first-bulgarian-empire"][aria-current="page"] {
+  background: linear-gradient(135deg, #2a1a0f, #0d0805) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5), 0 18px 36px rgba(0, 0, 0, 0.2) !important;
+}
