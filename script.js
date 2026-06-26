@@ -459,116 +459,109 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function addAnnotationCounters(annotations) {
-    if (!annotations || annotations.length === 0) return;
+function addAnnotationCounters(annotations) {
+  if (!annotations || annotations.length === 0) return;
 
-    const annotationsByText = {};
+  const annotationsByText = {};
 
-    annotations.forEach(ann => {
-      if (ann.target && ann.target.length > 0) {
-        const target = ann.target[0];
-        if (target.selector) {
-          const textSelector = target.selector.find(s => s.type === 'TextQuoteSelector');
-          if (textSelector && textSelector.exact) {
-            const text = textSelector.exact.trim();
-            if (!annotationsByText[text]) {
-              annotationsByText[text] = [];
-            }
-            annotationsByText[text].push(ann);
+  annotations.forEach(ann => {
+    if (ann.target && ann.target.length > 0) {
+      const target = ann.target[0];
+      if (target.selector) {
+        const textSelector = target.selector.find(s => s.type === 'TextQuoteSelector');
+        if (textSelector && textSelector.exact) {
+          const text = textSelector.exact.trim();
+          if (!annotationsByText[text]) {
+            annotationsByText[text] = [];
           }
+          annotationsByText[text].push(ann);
         }
       }
-    });
-
-    if (Object.keys(annotationsByText).length === 0) return;
-
-    const articleElem = document.querySelector('article');
-    if (!articleElem) return;
-
-    const walker = document.createTreeWalker(
-      articleElem,
-      NodeFilter.SHOW_TEXT,
-      {
-        acceptNode: function(node) {
-          if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight')) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
-            return NodeFilter.FILTER_REJECT;
-          }
-          return NodeFilter.FILTER_ACCEPT;
-        }
-      },
-      false
-    );
-
-    const textNodes = [];
-    let node;
-    while ((node = walker.nextNode())) {
-      textNodes.push(node);
     }
+  });
 
-    for (const [searchText, anns] of Object.entries(annotationsByText)) {
-      const count = anns.length;
-      for (const textNode of textNodes) {
-        const nodeText = textNode.nodeValue;
-        if (nodeText.includes(searchText)) {
-          const counter = document.createElement('sup');
-          counter.textContent = `(${count})`;
-          counter.style.color = '#0645ad';
-          counter.style.fontSize = '0.7rem';
-          counter.style.fontWeight = 'bold';
-          counter.style.marginLeft = '2px';
-          counter.style.cursor = 'pointer';
-          counter.style.backgroundColor = '#eef4ff';
-          counter.style.padding = '0 4px';
-          counter.style.borderRadius = '8px';
-          counter.style.border = '1px solid #0645ad';
-          counter.style.lineHeight = '1.4';
-          counter.title = `${count} коментар(а) – кликнете за да видите`;
+  if (Object.keys(annotationsByText).length === 0) return;
 
-          counter.addEventListener('click', function(e) {
-            e.stopPropagation();
-            if (window.hypothesis && window.hypothesis.openSidebar) {
-              window.hypothesis.openSidebar();
-            } else {
+  const articleElem = document.querySelector('article');
+  if (!articleElem) return;
+
+  // Обхождаме само текстовите възли, които НЕ са вътре в Hypothesis елементи
+  const walker = document.createTreeWalker(
+    articleElem,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: function(node) {
+        // Пропускаме текст вътре в анотациите на Hypothesis
+        if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight, .annotator-hl')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        // Пропускаме скрити елементи
+        if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    },
+    false
+  );
+
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    textNodes.push(node);
+  }
+
+  for (const [searchText, anns] of Object.entries(annotationsByText)) {
+    const count = anns.length;
+    for (const textNode of textNodes) {
+      const nodeText = textNode.nodeValue;
+      if (nodeText.includes(searchText)) {
+        // Създаваме брояч като отделен елемент, който да поставим СЛЕД маркирания текст
+        const counter = document.createElement('sup');
+        counter.className = 'hypothesis-counter';
+        counter.textContent = `(${count})`;
+        counter.title = `${count} коментар(а) – кликнете за да видите`;
+
+        counter.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (window.hypothesis && window.hypothesis.openSidebar) {
+            window.hypothesis.openSidebar();
+          } else {
+            // Ако Hypothesis не е зареден, зареждаме го
+            if (!document.querySelector('script[src*="hypothes.is/embed.js"]')) {
               const script = document.createElement('script');
               script.src = 'https://hypothes.is/embed.js';
               script.async = true;
-              script.onload = function() {
-                setTimeout(() => {
-                  if (window.hypothesis && window.hypothesis.openSidebar) {
-                    window.hypothesis.openSidebar();
-                  }
-                }, 1000);
-              };
               document.head.appendChild(script);
             }
-          });
-
-          const parent = textNode.parentNode;
-          const fragment = document.createDocumentFragment();
-          const parts = nodeText.split(searchText);
-
-          for (let i = 0; i < parts.length; i++) {
-            fragment.appendChild(document.createTextNode(parts[i]));
-            if (i < parts.length - 1) {
-              const span = document.createElement('span');
-              span.textContent = searchText;
-              span.style.backgroundColor = '#ffd';
-              span.style.borderRadius = '2px';
-              span.style.padding = '0 2px';
-              fragment.appendChild(span);
-              fragment.appendChild(counter.cloneNode(true));
-            }
+            // Опитваме да отворим след като се зареди
+            setTimeout(() => {
+              if (window.hypothesis && window.hypothesis.openSidebar) {
+                window.hypothesis.openSidebar();
+              }
+            }, 1500);
           }
+        });
 
-          parent.replaceChild(fragment, textNode);
-          break;
-        }
+        // Вмъкваме брояча СЛЕД текстовия възел, без да променяме самия текст
+        const parent = textNode.parentNode;
+        const range = document.createRange();
+        range.setStart(textNode, searchText.length + textNode.nodeValue.indexOf(searchText));
+        range.setEnd(textNode, searchText.length + textNode.nodeValue.indexOf(searchText));
+        const span = document.createElement('span');
+        span.className = 'hypothesis-highlighted-text';
+        span.textContent = searchText;
+        range.deleteContents();
+        range.insertNode(span);
+        span.after(counter);
+
+        // Маркираме, че сме обработили този текст (за да не го дублираме)
+        textNode.nodeValue = textNode.nodeValue.replace(searchText, '');
+        break;
       }
     }
   }
+}
 
   async function initHypothesisCounters() {
     const annotations = await fetchHypothesisAnnotations();
