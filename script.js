@@ -5,11 +5,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const results = document.getElementById('search-results');
   const article = document.querySelector('article');
 
-  // ===== ДАННИ ЗА ВЛАДЕТЕЛИТЕ (зареждат се от JSON) =====
+  // ======================================================
+  // 1. ДАННИ ЗА ВЛАДЕТЕЛИТЕ (от JSON)
+  // ======================================================
   let rulersData = [];
   let rulersLoaded = false;
 
-  // Функция за зареждане на данните от JSON файл
   async function loadRulersData() {
     if (rulersLoaded) return rulersData;
     try {
@@ -26,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // ===== POLLINATIONS.AI – иконки за владетели =====
+  // ======================================================
+  // 2. POLLINATIONS.AI – ИКОНКИ ЗА ВЛАДЕТЕЛИ
+  // ======================================================
   let pollinationsLoaded = false;
 
   function loadPollinationsScript() {
@@ -131,7 +134,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // ===== ФОРМАТИРАНЕ НА КАРТА ЗА СЛУЧАЕН ВЛАДЕТЕЛ =====
+  // ======================================================
+  // 3. СЛУЧАЕН ВЛАДЕТЕЛ – ДЖАДЖА
+  // ======================================================
   function formatRulerCard(ruler) {
     return `
       <div class="ruler-icon-container" 
@@ -145,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
   }
 
-  // ===== ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ =====
   async function createRandomRulerWidget() {
     const header = document.getElementById('top');
     if (!header) return;
@@ -183,7 +187,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ===== ТЪРСЕНЕ И ХАЙЛАЙТ =====
+  // ======================================================
+  // 4. ТЪРСЕНЕ И ХАЙЛАЙТ
+  // ======================================================
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -257,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateResults(count, query);
   }
 
-  // ===== DEBOUNCE =====
+  // ===== DEBOUNCE за input =====
   function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -270,7 +276,9 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // ===== НАВИГАЦИЯ (scroll spy) =====
+  // ======================================================
+  // 5. НАВИГАЦИЯ (scroll spy)
+  // ======================================================
   function resetCurrentNav() {
     const currentNav = document.querySelectorAll('.mw-sidebar a.nav-button[aria-current="page"]');
     currentNav.forEach((link) => link.removeAttribute('aria-current'));
@@ -343,7 +351,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('hashchange', updateCurrentNavByHash);
   }
 
-  // ===== МОБИЛНА ТЪРСАЧКА – ПРЕВКЛЮЧВАНЕ =====
+  // ======================================================
+  // 6. МОБИЛНА ТЪРСАЧКА – ПРЕВКЛЮЧВАНЕ
+  // ======================================================
   function initMobileSearchToggle() {
     const toggleBtn = document.querySelector('.search-toggle');
     const wrapper = document.querySelector('.searchbox-wrapper');
@@ -370,7 +380,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // ===== CHATANGO ЧАТ =====
+  // ======================================================
+  // 7. CHATANGO ЧАТ
+  // ======================================================
   function loadChatango() {
     const sidebar = document.querySelector('.mw-sidebar');
     if (!sidebar) return;
@@ -418,67 +430,171 @@ document.addEventListener('DOMContentLoaded', function () {
     sidebar.appendChild(chatContainer);
   }
 
-  // ===== HYPHOTHESIS – ИНИЦИАЛИЗАЦИЯ И БУТОН =====
-  function initHypothesis() {
-    // Проверяваме дали Hypothesis вече е зареден
-    if (document.querySelector('script[src*="hypothes.is/embed.js"]')) {
-      return;
-    }
+  // ======================================================
+  // 8. HYPHOTHESIS – БРОЯЧ НА КОМЕНТАРИ ВЪРХУ ДУМИ
+  // ======================================================
+  const HYPOTHESIS_API_TOKEN = '6879-AB69V9k94lLza5ZoeSw3wDtvXx2k42dtVDdFTcMXDYA';
+  const HYPOTHESIS_API_URL = 'https://hypothes.is/api/search';
 
-    // Добавяме конфигурация (опционално)
-    const configScript = document.createElement('script');
-    configScript.type = 'application/json';
-    configScript.className = 'js-hypothesis-config';
-    configScript.textContent = JSON.stringify({
-      // Можете да добавите настройки тук, напр.:
-      // openSidebar: false, // дали панелът да е отворен по подразбиране
-      // theme: 'clean', // или 'classic'
-    });
-    document.head.appendChild(configScript);
-
-    // Зареждаме основния скрипт на Hypothesis
-    const script = document.createElement('script');
-    script.src = 'https://hypothes.is/embed.js';
-    script.async = true;
-    document.head.appendChild(script);
-
-    // Добавяме бутон за бързо отваряне на Hypothesis панела (опционално)
-    // Този бутон ще се показва само ако съществува елемент с id="hypothesis-toggle"
-    const toggleBtn = document.getElementById('hypothesis-toggle');
-    if (toggleBtn) {
-      toggleBtn.addEventListener('click', function () {
-        // Използваме API на Hypothesis, ако е налично
-        if (window.hypothesis && window.hypothesis.openSidebar) {
-          window.hypothesis.openSidebar();
-        } else {
-          // Ако все още не е зареден, опитваме след малко
-          const checkHypothesis = setInterval(() => {
-            if (window.hypothesis && window.hypothesis.openSidebar) {
-              window.hypothesis.openSidebar();
-              clearInterval(checkHypothesis);
-            }
-          }, 500);
-          // Спираме опита след 10 секунди
-          setTimeout(() => clearInterval(checkHypothesis), 10000);
+  async function fetchHypothesisAnnotations() {
+    const pageUrl = window.location.href;
+    try {
+      const response = await fetch(
+        `${HYPOTHESIS_API_URL}?uri=${encodeURIComponent(pageUrl)}&limit=200`,
+        {
+          headers: {
+            'Authorization': `Bearer ${HYPOTHESIS_API_TOKEN}`
+          }
         }
-      });
+      );
+      if (!response.ok) {
+        console.warn('Грешка при зареждане на Hypothesis анотации:', response.status);
+        return [];
+      }
+      const data = await response.json();
+      return data.rows || [];
+    } catch (error) {
+      console.error('Грешка при заявка към Hypothesis API:', error);
+      return [];
     }
   }
 
-  // ===== ИНИЦИАЛИЗАЦИЯ =====
-  // 1. Зареждаме данните за владетелите
+  function addAnnotationCounters(annotations) {
+    if (!annotations || annotations.length === 0) return;
+
+    const annotationsByText = {};
+
+    annotations.forEach(ann => {
+      if (ann.target && ann.target.length > 0) {
+        const target = ann.target[0];
+        if (target.selector) {
+          const textSelector = target.selector.find(s => s.type === 'TextQuoteSelector');
+          if (textSelector && textSelector.exact) {
+            const text = textSelector.exact.trim();
+            if (!annotationsByText[text]) {
+              annotationsByText[text] = [];
+            }
+            annotationsByText[text].push(ann);
+          }
+        }
+      }
+    });
+
+    if (Object.keys(annotationsByText).length === 0) return;
+
+    const articleElem = document.querySelector('article');
+    if (!articleElem) return;
+
+    const walker = document.createTreeWalker(
+      articleElem,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: function(node) {
+          if (node.parentElement.closest('.hypothesis-annotation, .hypothesis-highlight')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          if (node.parentElement.closest('[style*="display:none"], [style*="display: none"]')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      },
+      false
+    );
+
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) {
+      textNodes.push(node);
+    }
+
+    for (const [searchText, anns] of Object.entries(annotationsByText)) {
+      const count = anns.length;
+      for (const textNode of textNodes) {
+        const nodeText = textNode.nodeValue;
+        if (nodeText.includes(searchText)) {
+          const counter = document.createElement('sup');
+          counter.textContent = `(${count})`;
+          counter.style.color = '#0645ad';
+          counter.style.fontSize = '0.7rem';
+          counter.style.fontWeight = 'bold';
+          counter.style.marginLeft = '2px';
+          counter.style.cursor = 'pointer';
+          counter.style.backgroundColor = '#eef4ff';
+          counter.style.padding = '0 4px';
+          counter.style.borderRadius = '8px';
+          counter.style.border = '1px solid #0645ad';
+          counter.style.lineHeight = '1.4';
+          counter.title = `${count} коментар(а) – кликнете за да видите`;
+
+          counter.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (window.hypothesis && window.hypothesis.openSidebar) {
+              window.hypothesis.openSidebar();
+            } else {
+              const script = document.createElement('script');
+              script.src = 'https://hypothes.is/embed.js';
+              script.async = true;
+              script.onload = function() {
+                setTimeout(() => {
+                  if (window.hypothesis && window.hypothesis.openSidebar) {
+                    window.hypothesis.openSidebar();
+                  }
+                }, 1000);
+              };
+              document.head.appendChild(script);
+            }
+          });
+
+          const parent = textNode.parentNode;
+          const fragment = document.createDocumentFragment();
+          const parts = nodeText.split(searchText);
+
+          for (let i = 0; i < parts.length; i++) {
+            fragment.appendChild(document.createTextNode(parts[i]));
+            if (i < parts.length - 1) {
+              const span = document.createElement('span');
+              span.textContent = searchText;
+              span.style.backgroundColor = '#ffd';
+              span.style.borderRadius = '2px';
+              span.style.padding = '0 2px';
+              fragment.appendChild(span);
+              fragment.appendChild(counter.cloneNode(true));
+            }
+          }
+
+          parent.replaceChild(fragment, textNode);
+          break;
+        }
+      }
+    }
+  }
+
+  async function initHypothesisCounters() {
+    const annotations = await fetchHypothesisAnnotations();
+    if (annotations.length > 0) {
+      addAnnotationCounters(annotations);
+      console.log(`✅ Добавени броячи за ${annotations.length} анотации.`);
+    } else {
+      console.log('ℹ️ Няма анотации за тази страница.');
+    }
+  }
+
+  // ======================================================
+  // 9. ИНИЦИАЛИЗАЦИЯ – СТАРТ
+  // ======================================================
+  // Зареждаме данните за владетелите
   loadRulersData();
 
-  // 2. Създаваме джаджата за случаен владетел
+  // Създаваме джаджата за случаен владетел
   createRandomRulerWidget();
 
-  // 3. Инициализираме scroll spy
+  // Инициализираме scroll spy
   initScrollSpy();
 
-  // 4. Търсене
+  // Търсене
   if (form && input && results && article) {
     form.addEventListener('submit', performSearch);
-
     const debouncedInput = debounce(function () {
       if (!input.value.trim()) {
         clearHighlights();
@@ -486,23 +602,43 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }, 300);
     input.addEventListener('input', debouncedInput);
-
     updateResults(0, '');
   }
 
-  // 5. Иконки на владетели (след малко зареждане)
+  // Иконки на владетели (след малко забавяне)
   setTimeout(() => {
     initRulerIcons();
   }, 500);
 
-  // 6. Мобилна търсачка
+  // Мобилна търсачка
   initMobileSearchToggle();
 
-  // 7. Chatango чат
+  // Chatango чат
   loadChatango();
 
-  // 8. Hypothesis – зареждане и бутон (ако има)
-  initHypothesis();
-});
+  // Hypothesis – зареждане на броячите след 2 секунди (за да се зареди Hypothesis скриптът)
+  setTimeout(initHypothesisCounters, 2000);
 
-// ===== (КРАЙ НА ФАЙЛА) =====
+  // Също така, ако има бутон за отваряне на Hypothesis, го свързваме (опционално)
+  const hypothesisToggle = document.getElementById('hypothesis-toggle');
+  if (hypothesisToggle) {
+    hypothesisToggle.addEventListener('click', function() {
+      if (window.hypothesis && window.hypothesis.openSidebar) {
+        window.hypothesis.openSidebar();
+      } else {
+        // Ако не е зареден, зареждаме го и отваряме след това
+        const script = document.createElement('script');
+        script.src = 'https://hypothes.is/embed.js';
+        script.async = true;
+        script.onload = function() {
+          setTimeout(() => {
+            if (window.hypothesis && window.hypothesis.openSidebar) {
+              window.hypothesis.openSidebar();
+            }
+          }, 1000);
+        };
+        document.head.appendChild(script);
+      }
+    });
+  }
+});
