@@ -25,12 +25,12 @@
   // 1. Зареждане на Pollinations (иконки)
   function loadPollinations() {
     return new Promise((resolve) => {
-      if (document.querySelector('script[src="/pollinations.js"]')) {
+      if (document.querySelector('script[src="pollinations.js"]')) {
         resolve();
         return;
       }
       const script = document.createElement('script');
-      script.src = '/pollinations.js';
+      script.src = 'pollinations.js';
       script.async = true;
       script.onload = resolve;
       script.onerror = () => {
@@ -44,12 +44,12 @@
   // 2. Зареждане на основния script.js (който съдържа функцията initHistorySite)
   function loadMainScript() {
     return new Promise((resolve) => {
-      if (document.querySelector('script[src="/script.js"]')) {
+      if (document.querySelector('script[src="script.js"]')) {
         resolve();
         return;
       }
       const script = document.createElement('script');
-      script.src = '/script.js';
+      script.src = 'script.js';
       script.defer = true;
       script.onload = resolve;
       script.onerror = () => {
@@ -70,7 +70,7 @@
 
     if (headerContainer) {
       promises.push(
-        fetch('/includes/header.html')
+        fetch('includes/header.html')
           .then(res => res.text())
           .then(html => { headerContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на header:', err))
@@ -79,7 +79,7 @@
 
     if (sidebarContainer) {
       promises.push(
-        fetch('/includes/sidebar.html')
+        fetch('includes/sidebar.html')
           .then(res => res.text())
           .then(html => { sidebarContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на sidebar:', err))
@@ -88,7 +88,7 @@
 
     if (footerContainer) {
       promises.push(
-        fetch('/includes/footer.html')
+        fetch('includes/footer.html')
           .then(res => res.text())
           .then(html => { footerContainer.innerHTML = html; })
           .catch(err => console.warn('Грешка при зареждане на footer:', err))
