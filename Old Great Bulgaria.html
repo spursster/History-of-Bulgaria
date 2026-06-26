@@ -1,45 +1,27 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <meta name="description" content="Историческа страница за българската история и нейното наследство." />
-<title>Стара Велика България</title>
+  <title>Стара Велика България</title>
   <link rel="stylesheet" href="styles.css">
+  <!-- Централизиран скрипт – зарежда всичко -->
+  <script src="js/bundle.js" defer></script>
 </head>
 <body>
   <div id="page">
-    
+
     <a class="skip-link" href="#content">Прескочи към съдържанието</a>
-    <header id="top">
-      <div class="site-title">
-        <a href="index.html">Историята на България</a>
-        <p class="site-tagline">Енциклопедична колекция от статии за българската история и свързаните държави.</p>
-      </div>
-      <form class="searchbox" action="#" method="get" role="search">
-        <label for="search" class="sr-only">Търсене в текста на страницата</label>
-        <input id="search" type="search" name="q" placeholder="Търсене в статията...">
-        <button type="submit">Търси</button>
-      </form>
-      <div id="search-results" class="search-results" role="status" aria-live="polite"></div>
-    </header>
+
+    <!-- ===== ХЕДЪР – зарежда се от includes/header.html ===== -->
+    <div id="header-container"></div>
 
     <div class="mw-body">
-            <aside class="mw-sidebar" aria-label="Навигация">
-        <h2>Навигация</h2>
-        <ul>
-          <li><a class="nav-button" href="index.html">Начало</a></li>
-          <li><a class="nav-button" href="index.html#first-bulgarian-empire">Първа българска държава</a></li>
-          <li><a class="nav-button" aria-current="page" href="Old Great Bulgaria.html">Стара Велика България</a></li>
-          <li><a class="nav-button" href="Second Bulgarian Empire.html">Втора българска държава</a></li>
-          <li><a class="nav-button" href="volga-bulgaria.html">Волжка България</a></li>
-          <li><a class="nav-button" href="Wallachia.html">Влашко</a></li>
-          <li><a class="nav-button" href="Odrysian Kingdom.html">Одриско Царство</a></li>
-          <li><a class="nav-button" href="macedonian-empire.html">Македонско Царство</a></li>
-        </ul>
-      </aside>
+      <!-- ===== СТРАНИЧНА ЛЕНТА – зарежда се от includes/sidebar.html ===== -->
+      <div id="sidebar-container"></div>
 
+      <!-- ===== ОСНОВНО СЪДЪРЖАНИЕ (уникално за тази страница) ===== -->
       <main class="mw-content" id="content">
         <article>
           <header class="mw-page-header">
@@ -99,13 +81,10 @@
       </main>
     </div>
 
-    <footer>
-      <p>Страница за Стара Велика България, създадена по енциклопедичен модел.</p>
-    </footer>
+    <!-- ===== ФУТЪР – зарежда се от includes/footer.html ===== -->
+    <div id="footer-container"></div>
+
   </div>
-<script src="js/bundle.js" defer></script>
+  <!-- Централизираният скрипт се зарежда от <head> (js/bundle.js) -->
 </body>
 </html>
-
-
-
