@@ -349,7 +349,9 @@ a:hover {
   background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
 }
 .mw-sidebar li a[href="#first-bulgarian-empire"] {
-  background: linear-gradient(180deg, rgba(20, 12, 6, 0.35), rgba(80, 48, 24, 0.25)), url('images/first-bulgaria.svg') no-repeat center right / cover;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(220, 200, 180, 0.8)), url('images/first-bulgaria.svg') no-repeat center right / cover;
+  color: #000 !important;
+  text-shadow: none;
 }
 .mw-sidebar li a[href="Second Bulgarian Empire.html"] {
   background: linear-gradient(135deg, rgba(40, 53, 147, 0.8), rgba(92, 107, 192, 0.8)), url('images/second-bulgaria.svg') no-repeat center right / 60% 60%;
