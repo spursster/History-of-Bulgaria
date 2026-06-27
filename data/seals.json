@@ -1,0 +1,22 @@
+{
+  "seals": [
+    {
+      "ruler": "Аспарух",
+      "title": "Печат на Аспарух",
+      "description": "Оловен печат на хан Аспарух, открит при разкопки в Плиска.",
+      "image": "images/seals/asparuh-seal.jpg"
+    },
+    {
+      "ruler": "Тервел",
+      "title": "Печат на Тервел",
+      "description": "Печат с гръцки надпис, открит в Константинопол.",
+      "image": "images/seals/tervel-seal.jpg"
+    },
+    {
+      "ruler": "Крум",
+      "title": "Печат на Крум",
+      "description": "Оловен печат на хан Крум, открит в Преслав.",
+      "image": "images/seals/krum-seal.jpg"
+    }
+  ]
+}
