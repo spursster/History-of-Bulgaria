@@ -96,4 +96,72 @@ Object.keys(pagesData.pages).forEach((pageKey) => {
   console.log(`✅ Генерирана страница: ${pageKey}.html`);
 });
 
+// ===== ГЕНЕРИРАНЕ НА СТРАНИЦА "ПЕЧАТИ" =====
+function generateSealsPage() {
+  const sealsPath = path.join(__dirname, 'data', 'seals.json');
+  const sealsData = JSON.parse(fs.readFileSync(sealsPath, 'utf8'));
+
+  let sealsHTML = '';
+  sealsData.seals.forEach((seal) => {
+    sealsHTML += `
+      <div class="seal-item" style="display:inline-block; width:200px; margin:1rem; text-align:center; border:1px solid var(--border); border-radius:8px; padding:1rem;">
+        <img src="${seal.image}" alt="${seal.title}" style="width:100%; height:auto; border-radius:4px;">
+        <h3 style="margin:0.5rem 0 0.25rem;">${seal.ruler}</h3>
+        <p style="font-size:0.85rem; color:var(--muted);">${seal.title}</p>
+        <p style="font-size:0.8rem; color:var(--text);">${seal.description}</p>
+      </div>
+    `;
+  });
+
+  const html = `<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сборник от исторически печати на българските владетели.">
+  <title>Исторически печати на владетелите</title>
+  <base href="/History-of-Bulgaria/">
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/bundle.js" defer></script>
+</head>
+<body>
+  <div id="page">
+    <a class="skip-link" href="#content">Прескочи към съдържанието</a>
+    <div id="header-container"></div>
+    <div class="mw-body">
+      <div id="sidebar-container"></div>
+      <main class="mw-content" id="content">
+        <article>
+          <header class="mw-page-header">
+            <h1>📜 Исторически печати на владетелите</h1>
+          </header>
+          <section class="intro">
+            <p>Тук са събрани изображения на оловни печати (моливдовули) на българските владетели от различни периоди.</p>
+          </section>
+          <section style="margin-top:2rem; text-align:center;">
+            ${sealsHTML}
+          </section>
+          <section class="references">
+            <h2>Източници</h2>
+            <ol>
+              <li>Археологически находки от Плиска, Преслав и други центрове.</li>
+              <li>Нумизматични и сфрагистични изследвания.</li>
+            </ol>
+          </section>
+        </article>
+      </main>
+    </div>
+    <div id="footer-container"></div>
+  </div>
+</body>
+</html>`;
+
+  const outputPath = path.join(__dirname, 'seals.html');
+  fs.writeFileSync(outputPath, html, 'utf8');
+  console.log('✅ Генерирана страница: seals.html');
+}
+
+// Извикваме функцията след генерирането на основните страници
+generateSealsPage();
+
 console.log('🎉 Всички страници са генерирани успешно!');
