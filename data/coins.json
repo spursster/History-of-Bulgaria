@@ -1,10 +1,10 @@
 {
   "coins": [
     {
-      "ruler": "Аспарух",
-      "title": "Монета на Аспарух",
-      "description": "Златна монета (солид) на хан Аспарух, открита при разкопки в Плиска.",
-      "image": "images/coins/asparuh-coin.jpg"
+      "ruler": "Яков Светослав",
+      "title": "Монета на Яков Светослав",
+      "description": "Липсва информация ",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjL103Gl_IU3W-glimQKELMigDrYOJ-cM7G4rWXjmlyh6bpKS4G7JNZtUhqq7Cso2VUWOG1X_1RtG5TT46_1VkTgxCAqoGjF9yBqEe7RolH0KCW25DYH8XNzNqNt-9yEksD3GBz2LYK7h-e5VgmVpVXGN4y27hpBZrJA_5-L1IKAeaiMamgEeUsNGr8DEsE/s320/JakovSvetoslav_coin_01.jpg"
     },
     {
       "ruler": "Тервел",
