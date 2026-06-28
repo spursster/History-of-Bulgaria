@@ -164,4 +164,72 @@ function generateSealsPage() {
 // Извикваме функцията след генерирането на основните страници
 generateSealsPage();
 
+// ===== ГЕНЕРИРАНЕ НА СТРАНИЦА "МОНЕТИ" =====
+function generateCoinsPage() {
+  const coinsPath = path.join(__dirname, 'data', 'coins.json');
+  const coinsData = JSON.parse(fs.readFileSync(coinsPath, 'utf8'));
+
+  let coinsHTML = '';
+  coinsData.coins.forEach((coin) => {
+    coinsHTML += `
+      <div class="coin-item" style="display:inline-block; width:220px; margin:1rem; text-align:center; border:1px solid var(--border); border-radius:8px; padding:1rem; vertical-align:top;">
+        <img src="${coin.image}" alt="${coin.title}" style="width:100%; height:180px; object-fit:cover; border-radius:4px;">
+        <h3 style="margin:0.5rem 0 0.25rem;">${coin.ruler}</h3>
+        <p style="font-size:0.85rem; color:var(--muted);">${coin.title}</p>
+        <p style="font-size:0.8rem; color:var(--text);">${coin.description}</p>
+      </div>
+    `;
+  });
+
+  const html = `<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Сборник от исторически монети на българските владетели.">
+  <title>Исторически монети на владетелите</title>
+  <base href="/History-of-Bulgaria/">
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/bundle.js" defer></script>
+</head>
+<body>
+  <div id="page">
+    <a class="skip-link" href="#content">Прескочи към съдържанието</a>
+    <div id="header-container"></div>
+    <div class="mw-body">
+      <div id="sidebar-container"></div>
+      <main class="mw-content" id="content">
+        <article>
+          <header class="mw-page-header">
+            <h1>🪙 Исторически монети на владетелите</h1>
+          </header>
+          <section class="intro">
+            <p>Тук са събрани изображения на монети (златни, сребърни, бронзови) на българските владетели от различни периоди.</p>
+          </section>
+          <section style="margin-top:2rem; text-align:center;">
+            ${coinsHTML}
+          </section>
+          <section class="references">
+            <h2>Източници</h2>
+            <ol>
+              <li>Нумизматични находки от Плиска, Преслав и други центрове.</li>
+              <li>Музейни колекции и археологически изследвания.</li>
+            </ol>
+          </section>
+        </article>
+      </main>
+    </div>
+    <div id="footer-container"></div>
+  </div>
+</body>
+</html>`;
+
+  const outputPath = path.join(__dirname, 'coins.html');
+  fs.writeFileSync(outputPath, html, 'utf8');
+  console.log('✅ Генерирана страница: coins.html');
+}
+
+// Извикваме функцията след генерирането на печатите
+generateCoinsPage();
+
 console.log('🎉 Всички страници са генерирани успешно!');
