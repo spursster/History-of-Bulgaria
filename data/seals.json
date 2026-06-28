@@ -1,10 +1,16 @@
 {
   "seals": [
     {
-      "ruler": "Аспарух",
-      "title": "Печат на Аспарух",
-      "description": "Оловен печат на хан Аспарух, открит при разкопки в Плиска.",
-      "image": "images/seals/asparuh-seal.jpg"
+      "ruler": "Калоян",
+      "title": "Печат на Калоян",
+      "description": "Моливдовул на цар Калоян",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhrWetJzNvmjdXCwSSANdog3IWoQimmhzwk55Uj3mzrAeEPBJ8EDTHZp9cw0sBZHD_im1302LwNb-5TUJnVFaAfTvU690c8KgUdIPoKFRmsda0o7zUHl3FC-YQO9MNALycySV-bLFYwKXemQ38DImuCuDMOall8HKdj-dfFFAOhLqMexhzfwJZy5yP0DaSl/s320/Kaloyan-1.png"
+    },
+     {
+      "ruler": "Калоян",
+      "title": "Печат на Калоян",
+      "description": "Моливдовул на цар Калоян - обратна страна",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgENdxjdwQQSNz2VIgVHP1zzG9JD4Gr0iTflBss5JMGFdNGSPS_Gq-O_xyhaoBC_GP8xg76kLw-t4WjJM-YidfdF6YryilWheICMJ8794Rg0Xxr5cLIpiV8gVUKY955T36nybPM4bsnUojQrWttO5GyKjyi6twcDAI4DferXRkLHikYGqWQbiyTm2Uf0Fn3/s320/Kaloyan-2.png"
     },
     {
       "ruler": "Тервел",
