@@ -1,0 +1,22 @@
+{
+  "coins": [
+    {
+      "ruler": "Аспарух",
+      "title": "Монета на Аспарух",
+      "description": "Златна монета (солид) на хан Аспарух, открита при разкопки в Плиска.",
+      "image": "images/coins/asparuh-coin.jpg"
+    },
+    {
+      "ruler": "Тервел",
+      "title": "Монета на Тервел",
+      "description": "Сребърна монета на хан Тервел, сечена в Константинопол.",
+      "image": "images/coins/tervel-coin.jpg"
+    },
+    {
+      "ruler": "Крум",
+      "title": "Монета на Крум",
+      "description": "Оловна монета на хан Крум, открита в Преслав.",
+      "image": "images/coins/krum-coin.jpg"
+    }
+  ]
+}
