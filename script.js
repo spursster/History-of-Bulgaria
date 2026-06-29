@@ -146,9 +146,9 @@ function initHistorySite() {
       <div class="ruler-icon-container" 
            data-ruler-name="${ruler.name}" 
            data-ruler-page="${ruler.page}"
-           style="width:80px;height:80px;border-radius:50%;overflow:hidden;float:left;margin-right:15px;background:#f0f0f0;flex-shrink:0;">
+           style="width:80px;height:80px;border-radius:50%;overflow:hidden;margin:0 auto 0.75rem;background:#f0f0f0;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
       </div>
-      <h2>${ruler.name}</h2>
+      <h2><span class="crown-icon">👑</span> ${ruler.name}</h2>
       <p><strong>Източник:</strong> ${ruler.page}</p>
       <p>${ruler.description}</p>
     `;
@@ -161,7 +161,7 @@ function initHistorySite() {
     const widget = document.createElement('div');
     widget.className = 'random-ruler-widget';
     widget.innerHTML = `
-      <button type="button" class="random-ruler-button">Покажи случаен владетел</button>
+      <button type="button" class="random-ruler-button">👑 Покажи случаен владетел</button>
       <div class="random-ruler-card" aria-live="polite">Натиснете бутона, за да видите случаен владетел и кратка информация за него.</div>
     `;
 
@@ -602,16 +602,13 @@ function initHistorySite() {
   // ======================================================
   // 9. ИНИЦИАЛИЗАЦИЯ – СТАРТ
   // ======================================================
-  // Зареждаме данните за владетелите
   loadRulersData();
 
-  // Създаваме джаджата за случаен владетел (в sidebar)
+  // Създаваме джаджата за случаен владетел
   createRandomRulerWidget();
 
-  // Инициализираме scroll spy
   initScrollSpy();
 
-  // Търсене
   if (form && input && results && article) {
     form.addEventListener('submit', performSearch);
     const debouncedInput = debounce(function () {
@@ -624,21 +621,15 @@ function initHistorySite() {
     updateResults(0, '');
   }
 
-  // Иконки на владетели (след малко забавяне)
   setTimeout(() => {
     initRulerIcons();
   }, 500);
 
-  // Мобилна търсачка
   initMobileSearchToggle();
-
-  // Chatango чат
   loadChatango();
 
-  // Hypothesis – зареждане на броячите след 2 секунди (за да се зареди Hypothesis скриптът)
   setTimeout(initHypothesisCounters, 2000);
 
-  // Също така, ако има бутон за отваряне на Hypothesis, го свързваме (опционално)
   const hypothesisToggle = document.getElementById('hypothesis-toggle');
   if (hypothesisToggle) {
     hypothesisToggle.addEventListener('click', function() {
@@ -661,8 +652,5 @@ function initHistorySite() {
   }
 }
 
-// Изнасяме функцията за инициализация глобално, за да може да бъде извикана от bundle.js
 window.initHistorySite = initHistorySite;
-
-// Изнасяме и функцията за джаджата, за да може да бъде извикана отделно, ако е необходимо
 window.createRandomRulerWidget = createRandomRulerWidget;
