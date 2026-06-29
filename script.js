@@ -155,8 +155,8 @@ function initHistorySite() {
   }
 
   async function createRandomRulerWidget() {
-   const sidebar = document.querySelector('.mw-sidebar');
-  if (!sidebar) return;
+    const sidebar = document.querySelector('.mw-sidebar');
+    if (!sidebar) return;
 
     const widget = document.createElement('div');
     widget.className = 'random-ruler-widget';
@@ -165,7 +165,7 @@ function initHistorySite() {
       <div class="random-ruler-card" aria-live="polite">Натиснете бутона, за да видите случаен владетел и кратка информация за него.</div>
     `;
 
-    header.appendChild(widget);
+    sidebar.appendChild(widget);
 
     const button = widget.querySelector('.random-ruler-button');
     const card = widget.querySelector('.random-ruler-card');
@@ -605,8 +605,8 @@ function initHistorySite() {
   // Зареждаме данните за владетелите
   loadRulersData();
 
-  // Създаваме джаджата за случаен владетел
-  //createRandomRulerWidget();
+  // Създаваме джаджата за случаен владетел (в sidebar)
+  createRandomRulerWidget();
 
   // Инициализираме scroll spy
   initScrollSpy();
@@ -663,3 +663,6 @@ function initHistorySite() {
 
 // Изнасяме функцията за инициализация глобално, за да може да бъде извикана от bundle.js
 window.initHistorySite = initHistorySite;
+
+// Изнасяме и функцията за джаджата, за да може да бъде извикана отделно, ако е необходимо
+window.createRandomRulerWidget = createRandomRulerWidget;
