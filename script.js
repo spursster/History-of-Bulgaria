@@ -155,8 +155,8 @@ function initHistorySite() {
   }
 
   async function createRandomRulerWidget() {
-    const header = document.getElementById('top');
-    if (!header) return;
+   const sidebar = document.querySelector('.mw-sidebar');
+  if (!sidebar) return;
 
     const widget = document.createElement('div');
     widget.className = 'random-ruler-widget';
@@ -606,7 +606,7 @@ function initHistorySite() {
   loadRulersData();
 
   // Създаваме джаджата за случаен владетел
-  createRandomRulerWidget();
+  //createRandomRulerWidget();
 
   // Инициализираме scroll spy
   initScrollSpy();
