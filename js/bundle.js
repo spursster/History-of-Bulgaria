@@ -106,6 +106,18 @@
     // Зареждаме компонентите
     await loadComponents();
 
+    // След като компонентите се заредят, добавяме джаджата в sidebar
+if (typeof window.createRandomRulerWidget === 'function') {
+  window.createRandomRulerWidget();
+} else {
+  // Ако функцията не е дефинирана (script.js още не е зареден), опитваме след малко
+  setTimeout(() => {
+    if (typeof window.createRandomRulerWidget === 'function') {
+      window.createRandomRulerWidget();
+    }
+  }, 500);
+}
+
     // Зареждаме Pollinations
     await loadPollinations();
 
