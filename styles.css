@@ -179,7 +179,7 @@ a:hover {
 
 /* ----- БУТОН ЗА РАЗКРИВАНЕ НА ТЪРСАЧКАТА (скрит на десктоп) ----- */
 .search-toggle {
-  display: none; /* скрит на десктоп */
+  display: none;
   background: none;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -203,9 +203,157 @@ a:hover {
   font-size: 0.95rem;
 }
 
-/* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ ----- */
-.random-ruler-widget {
-  margin-top: 1rem;
+/* ----- ХАЙЛАЙТ (търсене) ----- */
+.search-highlight {
+  background: #ffe58d;
+  padding: 0 0.1rem;
+  border-radius: 0.25rem;
+  box-decoration-break: clone;
+}
+
+/* ----- ОСНОВНО ТЕЛО (grid) ----- */
+.mw-body {
+  display: grid;
+  grid-template-columns: 290px 1fr;
+  gap: 1.5rem;
+}
+
+/* ----- СТРАНИЧНА НАВИГАЦИЯ ----- */
+.mw-sidebar {
+  background: var(--paper);
+  padding: 1rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+}
+.mw-sidebar h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--text);
+}
+.mw-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+}
+.mw-sidebar li {
+  margin-bottom: 0.5rem;
+}
+
+/* ----- НАВИГАЦИОННИ БУТОНИ ----- */
+.mw-sidebar li a {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding: 0.9rem 1rem;
+  color: #fff !important;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition), box-shadow var(--transition),
+    filter var(--transition);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  text-align: center;
+  min-height: 3rem;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+.mw-sidebar li a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: inherit;
+  z-index: -1;
+  transition: background 0.3s ease;
+}
+
+.mw-sidebar li a:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  filter: brightness(1.05);
+}
+.mw-sidebar li a:hover::before {
+  background: rgba(0, 0, 0, 0.35);
+}
+.mw-sidebar li a:focus-visible {
+  outline: 3px solid rgba(6, 69, 173, 0.65);
+  outline-offset: 3px;
+}
+.mw-sidebar li a[aria-current="page"] {
+  background: linear-gradient(135deg, #0645ad, #072a66) !important;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.85), var(--shadow-lg);
+  transform: translateY(-2px);
+}
+.mw-sidebar li a[aria-current="page"]::before {
+  background: rgba(0, 20, 60, 0.7) !important;
+}
+
+/* ----- СПЕЦИФИЧНИ ФОНОВЕ ЗА БУТОНИТЕ ----- */
+.mw-sidebar li a[href="#introduction"] {
+  background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
+}
+.mw-sidebar li a[href="#early-history"] {
+  background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
+}
+.mw-sidebar li a[href="#first-bulgarian-empire"],
+.mw-sidebar li a[href="index.html#first-bulgarian-empire"] {
+  background: linear-gradient(135deg, #4a2c1a, #1f1108) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  border: none !important;
+}
+.mw-sidebar li a[href="#first-bulgarian-empire"][aria-current="page"],
+.mw-sidebar li a[href="index.html#first-bulgarian-empire"][aria-current="page"] {
+  background: linear-gradient(135deg, #2a1a0f, #0d0805) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5), 0 18px 36px rgba(0, 0, 0, 0.2) !important;
+}
+.mw-sidebar li a[href="Second Bulgarian Empire.html"] {
+  background: linear-gradient(135deg, rgba(40, 53, 147, 0.8), rgba(92, 107, 192, 0.8)), url('images/second-bulgaria.svg') no-repeat center right / 60% 60%;
+}
+.mw-sidebar li a[href="Wallachia.html"] {
+  background: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="Odrysian Kingdom.html"] {
+  background: linear-gradient(135deg, rgba(92, 61, 41, 0.9), rgba(208, 155, 86, 0.9)), url('images/odrysian.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="macedonian-empire.html"] {
+  background: linear-gradient(135deg, rgba(79, 38, 48, 0.9), rgba(168, 97, 77, 0.9)), url('images/macedonia.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="volga-bulgaria.html"] {
+  background: linear-gradient(135deg, rgba(8, 57, 89, 0.9), rgba(80, 145, 188, 0.9)), url('images/volga.svg') no-repeat center right / 55% 55%;
+}
+.mw-sidebar li a[href="Old Great Bulgaria.html"] {
+  background: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg') no-repeat center right / 55% 55%;
+  background-blend-mode: multiply;
+}
+.mw-sidebar li a[href="#ottoman-period"] {
+  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
+}
+.mw-sidebar li a[href="#modern-history"] {
+  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%;
+}
+
+/* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ (в sidebar) ----- */
+.mw-sidebar .random-ruler-widget {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
   display: grid;
   gap: 0.75rem;
 }
@@ -263,120 +411,6 @@ a:hover {
 }
 .random-ruler-card strong {
   color: var(--text);
-}
-
-/* ----- ХАЙЛАЙТ (търсене) ----- */
-.search-highlight {
-  background: #ffe58d;
-  padding: 0 0.1rem;
-  border-radius: 0.25rem;
-  box-decoration-break: clone;
-}
-
-/* ----- ОСНОВНО ТЕЛО (grid) ----- */
-.mw-body {
-  display: grid;
-  grid-template-columns: 290px 1fr;
-  gap: 1.5rem;
-}
-
-/* ----- СТРАНИЧНА НАВИГАЦИЯ ----- */
-.mw-sidebar {
-  background: var(--paper);
-  padding: 1rem 0.75rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  position: sticky;
-  top: 1rem;
-  max-height: calc(100vh - 2rem);
-  overflow: auto;
-}
-.mw-sidebar h2 {
-  margin-top: 0;
-  font-size: 1rem;
-  color: var(--text);
-}
-.mw-sidebar ul {
-  list-style: none;
-  padding: 0;
-  margin: 0.75rem 0 0;
-}
-.mw-sidebar li {
-  margin-bottom: 0.5rem;
-}
-
-/* ----- НАВИГАЦИОННИ БУТОНИ ----- */
-.mw-sidebar li a {
-  display: block;
-  padding: 0.9rem 1rem;
-  color: #fff;
-  border-radius: var(--radius-lg);
-  font-weight: 600;
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition), box-shadow var(--transition),
-    filter var(--transition);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  text-decoration: none;
-  text-align: center;
-  min-height: 3rem;
-  line-height: 1.35;
-  letter-spacing: 0.02em;
-}
-.mw-sidebar li a:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: var(--shadow-lg);
-  filter: brightness(1.05);
-}
-.mw-sidebar li a:focus-visible {
-  outline: 3px solid rgba(6, 69, 173, 0.65);
-  outline-offset: 3px;
-}
-.mw-sidebar li a[aria-current="page"] {
-  background: linear-gradient(135deg, #0645ad, #072a66) !important;
-  color: #fff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.85), var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-/* ----- СПЕЦИФИЧНИ ФОНОВЕ ЗА БУТОНИТЕ ----- */
-.mw-sidebar li a[href="#introduction"] {
-  background: radial-gradient(circle at top left, rgba(255, 241, 196, 0.95), rgba(215, 171, 79, 0.95)), linear-gradient(135deg, #b3884a 0%, #6f4d10 100%);
-}
-.mw-sidebar li a[href="#early-history"] {
-  background: linear-gradient(135deg, #6d4c41 0%, #a1887f 100%);
-}
-.mw-sidebar li a[href="#first-bulgarian-empire"] {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(220, 200, 180, 0.8)), url('images/first-bulgaria.svg') no-repeat center right / cover;
-  color: #000 !important;
-  text-shadow: none;
-}
-.mw-sidebar li a[href="Second Bulgarian Empire.html"] {
-  background: linear-gradient(135deg, rgba(40, 53, 147, 0.8), rgba(92, 107, 192, 0.8)), url('images/second-bulgaria.svg') no-repeat center right / 60% 60%;
-}
-.mw-sidebar li a[href="Wallachia.html"] {
-  background: linear-gradient(135deg, rgba(82, 48, 29, 0.85), rgba(165, 124, 43, 0.9)), url('images/wallachia.svg') no-repeat center right / 55% 55%;
-}
-.mw-sidebar li a[href="Odrysian Kingdom.html"] {
-  background: linear-gradient(135deg, rgba(92, 61, 41, 0.9), rgba(208, 155, 86, 0.9)), url('images/odrysian.svg') no-repeat center right / 55% 55%;
-}
-.mw-sidebar li a[href="macedonian-empire.html"] {
-  background: linear-gradient(135deg, rgba(79, 38, 48, 0.9), rgba(168, 97, 77, 0.9)), url('images/macedonia.svg') no-repeat center right / 55% 55%;
-}
-.mw-sidebar li a[href="volga-bulgaria.html"] {
-  background: linear-gradient(135deg, rgba(8, 57, 89, 0.9), rgba(80, 145, 188, 0.9)), url('images/volga.svg') no-repeat center right / 55% 55%;
-}
-.mw-sidebar li a[href="Old Great Bulgaria.html"] {
-  background: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg') no-repeat center right / 55% 55%;
-  background-blend-mode: multiply;
-}
-.mw-sidebar li a[href="#ottoman-period"] {
-  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
-}
-.mw-sidebar li a[href="#modern-history"] {
-  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%);
 }
 
 /* ----- ЧАТ В СТРАНИЧНАТА ЛЕНТА ----- */
@@ -559,7 +593,7 @@ footer {
     gap: 0.5rem;
   }
   .site-title a {
-    font-size: 1.5rem; /* по-малко */
+    font-size: 1.5rem;
   }
   .site-tagline {
     font-size: 0.75rem;
@@ -568,17 +602,17 @@ footer {
 
   /* ----- ТЪРСАЧКА – скрита, показва се само бутон с лупа ----- */
   .search-toggle {
-    display: inline-block; /* показваме на мобилни */
-    margin-left: auto;     /* избутваме вдясно */
+    display: inline-block;
+    margin-left: auto;
     align-self: center;
   }
   .searchbox-wrapper {
-    display: none;        /* скрита по подразбиране */
+    display: none;
     width: 100%;
     margin-top: 0.5rem;
   }
   .searchbox-wrapper.open {
-    display: block;       /* показва се при добавяне на клас .open */
+    display: block;
   }
 
   .searchbox {
@@ -616,6 +650,12 @@ footer {
   #chatango-container iframe,
   #chatango-container object {
     height: 280px !important;
+  }
+
+  /* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ В SIDEBAR (на мобилни) ----- */
+  .mw-sidebar .random-ruler-widget {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
   }
 }
 
@@ -660,7 +700,9 @@ footer {
   }
 }
 
-/* ===== HYPHOTHESIS БРОЯЧИ ===== */
+/* ============================================================
+   HYPHOTHESIS БРОЯЧИ
+   ============================================================ */
 .hypothesis-counter {
   color: #0645ad;
   font-size: 0.7rem;
@@ -685,65 +727,8 @@ footer {
   transform: scale(0.95);
 }
 
-/* Маркиран текст (жълт фон) */
 .hypothesis-highlighted-text {
   background-color: #ffd;
   border-radius: 2px;
   padding: 0 2px;
-}
-/* === ЗАДЪЛЖИТЕЛНО ТЪМЕН ФОН ЗА БУТОН "ПЪРВА БЪЛГАРСКА ДЪРЖАВА" === */
-.mw-sidebar li a[href="#first-bulgarian-empire"],
-.mw-sidebar li a[href="index.html#first-bulgarian-empire"] {
-  background: linear-gradient(135deg, #4a2c1a, #1f1108) !important;
-  color: #fff !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
-  border: none !important;
-}
-
-/* Ако искате да запазите картинката, използвайте това: */
-/*
-.mw-sidebar li a[href="#first-bulgarian-empire"],
-.mw-sidebar li a[href="index.html#first-bulgarian-empire"] {
-  background: linear-gradient(135deg, rgba(30, 20, 10, 0.9), rgba(60, 40, 20, 0.85)), url('images/first-bulgaria.svg') no-repeat center right / cover !important;
-  color: #fff !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
-}
-*/
-
-/* За да не става бял дори при активна страница (aria-current) */
-.mw-sidebar li a[href="#first-bulgarian-empire"][aria-current="page"],
-.mw-sidebar li a[href="index.html#first-bulgarian-empire"][aria-current="page"] {
-  background: linear-gradient(135deg, #2a1a0f, #0d0805) !important;
-  color: #fff !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
-  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5), 0 18px 36px rgba(0, 0, 0, 0.2) !important;
-}
-/* ===== ТЪМЕН СЛОЙ ВЪРХУ БУТОНИТЕ ЗА ПО-ДОБЪР КОНТРАСТ ===== */
-.mw-sidebar li a {
-  position: relative;
-  z-index: 1;
-  color: #fff !important;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7) !important;
-}
-
-.mw-sidebar li a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: inherit;
-  z-index: -1;
-  transition: background 0.3s ease;
-}
-
-.mw-sidebar li a:hover::before {
-  background: rgba(0, 0, 0, 0.35);
-}
-
-/* За активния бутон (aria-current) – запазваме синия фон, но добавяме тъмен слой отдолу */
-.mw-sidebar li a[aria-current="page"]::before {
-  background: rgba(0, 20, 60, 0.7) !important;
 }
