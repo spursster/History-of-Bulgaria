@@ -221,3 +221,5 @@ function generateCoinsPage() {
 generateSealsPage();
 generateCoinsPage();
 console.log('🎉 Всички страници са генерирани успешно!');
+
+console.log(`📊 Общо монети в coins.json: ${coinsData.coins.length}`);
