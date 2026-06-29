@@ -342,37 +342,42 @@ a:hover {
   background: linear-gradient(135deg, rgba(22, 10, 4, 0.92), rgba(97, 72, 32, 0.92)), url('images/staro-velika.svg') no-repeat center right / 55% 55%;
   background-blend-mode: multiply;
 }
-.mw-sidebar li a[href="#ottoman-period"] {
-  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
-}
-.mw-sidebar li a[href="#modern-history"] {
-  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%;
-}
-
-/* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ (в sidebar) ----- */
+.mw-sidebar li a[href="#ottoman-period"] {/* ----- ДЖАДЖА ЗА СЛУЧАЕН ВЛАДЕТЕЛ (в sidebar) ----- */
 .mw-sidebar .random-ruler-widget {
   margin-top: 1.5rem;
   padding-top: 1rem;
   border-top: 1px solid var(--border);
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 0.75rem;
+  text-align: center;
 }
 
 .random-ruler-button {
-  border: 1px solid var(--border);
+  width: 100%;
+  border: none;
   border-radius: var(--radius-lg);
   padding: 0.85rem 1rem;
-  background: var(--link);
-  color: #fff;
+  background: linear-gradient(135deg, #f7c948, #f0a500);
+  color: #1a1a1a;
   font-weight: 700;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: background var(--transition), transform var(--transition),
-    box-shadow var(--transition);
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(240, 165, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 .random-ruler-button:hover {
-  background: #0b5ed7;
+  background: linear-gradient(135deg, #f5c542, #e09500);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 20px rgba(240, 165, 0, 0.4);
+}
+.random-ruler-button:active {
+  transform: scale(0.97);
 }
 .random-ruler-button:focus-visible {
   outline: 3px solid rgba(6, 69, 173, 0.65);
@@ -380,14 +385,16 @@ a:hover {
 }
 
 .random-ruler-card {
+  width: 100%;
   border: 1px solid var(--border);
   background: var(--paper);
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   color: var(--text);
   animation: fadeInUp 0.4s ease forwards;
   overflow: hidden;
+  text-align: center;
 }
 
 @keyframes fadeInUp {
@@ -401,17 +408,43 @@ a:hover {
   }
 }
 
+.random-ruler-card .ruler-icon-container {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f0f0f0;
+  margin: 0 auto 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
 .random-ruler-card h2 {
-  margin: 0 0 0.5rem;
-  font-size: 1.15rem;
+  margin: 0 0 0.25rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.random-ruler-card h2 .crown-icon {
+  font-size: 1.1rem;
+  margin-right: 0.3rem;
 }
 .random-ruler-card p {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   line-height: 1.5;
+  font-size: 0.95rem;
 }
 .random-ruler-card strong {
   color: var(--text);
 }
+  background: linear-gradient(135deg, #5d4037 0%, #a1887f 100%);
+}
+.mw-sidebar li a[href="#modern-history"] {
+  background: linear-gradient(135deg, #2e7d32 0%, #81c784 100%;
+}
+
+
 
 /* ----- ЧАТ В СТРАНИЧНАТА ЛЕНТА ----- */
 #chatango-container {
