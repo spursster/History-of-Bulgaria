@@ -14,14 +14,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4    # ← все още няма v5, но ще бъде обновена
-      - uses: actions/setup-node@v4  # ← все още няма v5
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: '24'         # ← задайте изрично Node.js 24
+          node-version: '24'
+
       - name: Generate HTML pages
         run: node generate.js
+
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v4  # ← все още няма v5
+        uses: actions/upload-pages-artifact@v3   # ← v3 (работи стабилно)
+        with:
+          path: .   # ← ТОВА Е КЛЮЧОВОТО – качва цялата папка
 
   deploy:
     needs: build
@@ -32,4 +37,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4   # ← все още няма v5
+        uses: actions/deploy-pages@v4
